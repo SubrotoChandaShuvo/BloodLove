@@ -8,8 +8,12 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const Login = () => {
-  const { setUser, handleGoogleSignin, loading, setLoading } =
-    useContext(AuthContext);
+  const {
+    setUser,
+    // handleGoogleSignin,
+    loading,
+    setLoading,
+  } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -49,39 +53,39 @@ const Login = () => {
     }
   };
 
-  const googleSignin = () => {
-    handleGoogleSignin()
-      .then((result) => {
-        const user = result.user;
-        setUser(user);
-        setLoading(false);
-        Swal.fire({
-          title: "Login Successful! 🎉",
-          icon: "success",
-          draggable: true,
-        });
-        // toast.success("Login Successful! 🎉");
-        navigate(location.state ? location.state : "/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  // const googleSignin = () => {
+  //   handleGoogleSignin()
+  //     .then((result) => {
+  //       const user = result.user;
+  //       setUser(user);
+  //       setLoading(false);
+  //       Swal.fire({
+  //         title: "Login Successful! 🎉",
+  //         icon: "success",
+  //         draggable: true,
+  //       });
+  //       // toast.success("Login Successful! 🎉");
+  //       navigate(location.state ? location.state : "/");
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
 
-    if (loading) {
-      return (
-        <div className="flex justify-center pt-10">
-          <span className="loading loading-spinner text-neutral loading-lg scale-250"></span>
-        </div>
-      );
-    }
-  };
+  //   if (loading) {
+  //     return (
+  //       <div className="flex justify-center pt-10">
+  //         <span className="loading loading-spinner text-neutral loading-lg scale-250"></span>
+  //       </div>
+  //     );
+  //   }
+  // };
 
   const handleForget = () => {
     navigate(`/forget/${email}`);
   };
 
   return (
-    <div>
+    <div className="">
       <title>Login</title>
       <div className="hero min-h-lvw lg:min-h-screen p-4 md:p-0">
         <div className="card bg-base-100 w-full max-w-sm md:max-w-md lg:max-w-lg shrink-0 shadow-2xl transform transition-transform duration-300 hover:scale-105 shadow-gray-600">

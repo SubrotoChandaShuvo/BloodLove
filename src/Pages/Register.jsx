@@ -6,6 +6,7 @@ import { updateProfile } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const Register = () => {
   const {
@@ -13,78 +14,130 @@ const Register = () => {
     setUser,
     loading,
     setLoading,
-    handleGoogleSignin,
+    // handleGoogleSignin,
   } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [showPass, setShowPass] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const pass = e.target.password.value;
     const name = e.target.name.value;
-    const photoUrl = e.target.photoUrl.value;
+    const photoUrl = e.target.photoUrl;
+    const file = photoUrl.files[0];
+
+    console.log(file);
 
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
     if (pass.length < 6) {
-      return toast.error("Less then 6 characters");
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Less then 6 characters!",
+      });
     }
     if (!uppercase.test(pass)) {
-      return toast.error("Need a Uppercase Latter");
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Need a Uppercase Latter!",
+      });
     }
     if (!lowercase.test(pass)) {
-      return toast.error("Need a lowercase Latter");
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Need a lowercase Latter!",
+      });
     }
 
-    registerWithEmailPassword(email, pass)
-      .then((userCredential) => {
-        updateProfile(auth.currentUser, {
-          displayName: name,
-          photoURL: photoUrl,
-        })
-          .then(() => {
-            setUser(userCredential.user);
-            Swal.fire({
-              title: "Registration Successful! 🎉",
-              icon: "success",
-              draggable: true,
-            });
-            // toast.success("Registration Successful! 🎉");
-            // console.log(userCredential.user);
-            setLoading(false);
-            navigate("/");
+    const res = await axios.post(
+      `https://api.imgbb.com/1/upload?key=f597642f9c8f007109a3f030821c0edb`,
+      { image: file },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    // console.log(res.data);
+
+    const mainPhotoUrl = res.data.data.display_url;
+
+    const formData = {
+      email,
+      pass,
+      name,
+      mainPhotoUrl,
+    }
+
+    if (res.data.success == true) {
+      registerWithEmailPassword(email, pass)
+        .then((userCredential) => {
+          updateProfile(auth.currentUser, {
+            displayName: name,
+            photoURL: mainPhotoUrl,
           })
-          .catch((error) => {
-            console.log(error);
-            setLoading(false);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+            .then(() => {
+              setUser(userCredential.user);
+              Swal.fire({
+                title: "Registration Successful! 🎉",
+                icon: "success",
+                draggable: true,
+              });
+              // store users info in our DB
+              axios.post('http://localhost:5001/users',formData)
+              .then(res=>{
+                console.log(res.data);
+                
+              })
+              .catch(err=>{
+                console.log(err);
+                
+              })
+
+              // toast.success("Registration Successful! 🎉");
+              // console.log(userCredential.user);
+              setLoading(false);
+              navigate("/");
+            })
+            .catch((error) => {
+              console.log(error);
+              setLoading(false);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
   };
 
-  const googleSignup = () => {
-    handleGoogleSignin()
-      .then((result) => {
-        const user = result.user;
-        setUser(user);
-        Swal.fire({
-          title: "Registration Successful! 🎉",
-          icon: "success",
-          draggable: true,
-        });
-        // toast.success("Signup Successful! 🎉");
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Signup Process failed❗ Please try again.");
-      });
-  };
+  // const googleSignup = () => {
+  //   handleGoogleSignin()
+  //     .then((result) => {
+  //       const user = result.user;
+  //       setUser(user);
+  //       Swal.fire({
+  //         title: "Registration Successful! 🎉",
+  //         icon: "success",
+  //         draggable: true,
+  //       });
+  //       // toast.success("Signup Successful! 🎉");
+  //       navigate("/");
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //        Swal.fire({
+  //       icon: "error",
+  //       title: "Oops...",
+  //       text: "Signup Process failed❗ Please try again.",
+  //     });
+  //     });
+  // };
 
   return (
     <div>
@@ -96,6 +149,7 @@ const Register = () => {
               <h1 className="text-3xl text-center">Register</h1>
               <label className="text-[15px]">Email</label>
               <input
+                required
                 name="email"
                 type="email"
                 className="input w-full"
@@ -103,21 +157,24 @@ const Register = () => {
               />
               <label className="text-[15px]">Name</label>
               <input
+                required
                 name="name"
                 type="text"
                 className="input w-full"
                 placeholder="Your Full Name"
               />
-              <label className="text-[15px]">PhotoURL</label>
+              <label className="text-[15px]">Photo</label>
               <input
+                required
                 name="photoUrl"
-                type="text"
+                type="file"
                 className="input w-full"
-                placeholder="Enter Your PhotoURL"
+                placeholder="Enter Your Photo"
               />
               <label className="text-[15px]">Password</label>
               <div className="relative">
                 <input
+                  required
                   name="password"
                   type={showPass ? "text" : "password"}
                   className="input w-full pr-10"
