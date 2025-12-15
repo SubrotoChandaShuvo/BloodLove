@@ -4,7 +4,7 @@ import Navbar from '../Components/Navbar';
 
 const RootLayout = () => {
     return (
-        <div className='flex'>
+        <div >
             <Navbar></Navbar>
             <Outlet></Outlet>
         </div>

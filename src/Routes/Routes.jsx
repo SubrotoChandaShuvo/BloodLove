@@ -6,6 +6,7 @@ import Login from "../Pages/Login";
 import DasboardLayout from "../DashboardLayout/DasboardLayout";
 import MainDashboard from "../Pages/Dashboard/MainDashboard/MainDashboard";
 import AddProduct from "../Pages/Dashboard/AddProduct/AddProduct";
+import ManageProduct from "../Pages/ManageProduct/ManageProduct";
 
 
 const router = createBrowserRouter([
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path:'add-product',
         element:<AddProduct/>
+      },
+      {
+        path:'manage-product',
+        element:<ManageProduct/>
       }
     ]
   }

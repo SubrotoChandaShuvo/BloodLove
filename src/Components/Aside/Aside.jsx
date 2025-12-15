@@ -5,15 +5,16 @@ import {
   Settings,
   BarChart,
   LogOut,
-  CirclePlus
+  CirclePlus,
+  ChartNoAxesGantt
 } from "lucide-react";
 
 const Aside= () => {
   const menuItems = [
     { name: "Dashboard", path: "/dashboard/main", icon: <Home size={20} /> },
     { name: "Add Product", path: "/dashboard/add-product", icon: <CirclePlus size={20} /> },
+    { name: "Manage Products", path: "/dashboard/manage-product", icon: <ChartNoAxesGantt size={20} /> },
     { name: "Users", path: "/dashboard/users", icon: <Users size={20} /> },
-    { name: "Analytics", path: "/dashboard/analytics", icon: <BarChart size={20} /> },
     { name: "Settings", path: "/dashboard/settings", icon: <Settings size={20} /> }
   ];
 

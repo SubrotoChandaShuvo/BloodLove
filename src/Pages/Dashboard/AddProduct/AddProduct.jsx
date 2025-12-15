@@ -1,9 +1,10 @@
-import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import useAxios from "../../../hooks/useAxios";
+import { AuthContext } from "../../../Provider/AuthProvider";
 
 const AddProduct = () => {
   const [showHome, setShowHome] = useState(false);
+  const {user} = useContext(AuthContext);
 
   const axiosInstance = useAxios()
 
@@ -26,7 +27,8 @@ const AddProduct = () => {
       payment_method: form.payment_method.value,
       show_on_home: showHome,
       remarks: form.remarks.value,
-      showHome
+      showHome,
+      managerEmail:user?.email
     };
 
     // console.log("Product Data to send:", formData);
