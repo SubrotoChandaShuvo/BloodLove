@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
+import useAxios from "../../../hooks/useAxios";
 
 const AddProduct = () => {
   const [showHome, setShowHome] = useState(false);
+
+  const axiosInstance = useAxios()
 
   const handleAddProduct = (e) => {
     e.preventDefault();
@@ -26,10 +29,11 @@ const AddProduct = () => {
       showHome
     };
 
-    console.log("Product Data to send:", formData);
-    axios.post('http://localhost:5001/products', formData)
+    // console.log("Product Data to send:", formData);
+    axiosInstance.post('/products', formData)
     .then(res=>{
-        console.log(res.data);        
+        console.log(res.data);  
+        alert(res.data.insertedId)      
     })
     .catch(err=>console.log(err))
 
