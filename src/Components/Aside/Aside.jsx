@@ -3,7 +3,7 @@ import {
   Home,
   Users,
   Settings,
-  BarChart,
+  ArrowBigLeft,
   LogOut,
   CirclePlus,
   ChartNoAxesGantt
@@ -15,7 +15,8 @@ const Aside= () => {
     { name: "Add Product", path: "/dashboard/add-product", icon: <CirclePlus size={20} /> },
     { name: "Manage Products", path: "/dashboard/manage-product", icon: <ChartNoAxesGantt size={20} /> },
     { name: "Users", path: "/dashboard/users", icon: <Users size={20} /> },
-    { name: "Settings", path: "/dashboard/settings", icon: <Settings size={20} /> }
+    { name: "Settings", path: "/dashboard/settings", icon: <Settings size={20} /> },
+    { name: "Main", path: "/", icon: <ArrowBigLeft size={20} /> }
   ];
 
   return (

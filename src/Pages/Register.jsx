@@ -27,10 +27,7 @@ const Register = () => {
     const name = e.target.name.value;
     const photoUrl = e.target.photoUrl;
     const file = photoUrl.files[0];
-    const role= e.target.role.value;
-
-    console.log(role);
-
+    const blood = e.target.blood.value;
 
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
@@ -74,7 +71,7 @@ const Register = () => {
       pass,
       name,
       mainPhotoUrl,
-      role
+      blood,
     };
 
     if (res.data.success == true) {
@@ -174,10 +171,24 @@ const Register = () => {
                 placeholder="Enter Your Photo"
               />
 
-              <select name="role" defaultValue="Choose Role" className="select w-full">
-                <option disabled={true}>Choose Role</option>
-                <option value="manager">Manager</option>
-                <option value="buyer">Buyer</option>
+              <label className="text-[15px]">Blood Group</label>
+              <select
+                name="blood"
+                defaultValue=""
+                required
+                className="select w-full"
+              >
+                <option value="" disabled>
+                  Select Blood Group
+                </option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
               </select>
 
               <label className="text-[15px]">Password</label>
