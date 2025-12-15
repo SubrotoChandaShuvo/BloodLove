@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../Provider/AuthProvider";
 import auth from "../firebase/firebase.config";
@@ -19,6 +19,27 @@ const Register = () => {
   const navigate = useNavigate();
 
   const [showPass, setShowPass] = useState(false);
+  
+  const [upazilas, setUpazilas]=useState([])
+  const [districts, setDistricts]=useState([])
+  const [district, setDistrict]=useState('')
+  const [upazila, setUpazila]=useState('')
+
+  useEffect(()=>{
+    axios.get('/upazila.json')
+    .then(res=>{
+      setUpazilas(res.data.upazilas)
+    })
+
+    axios.get('/district.json')
+    .then(res=>{
+      setDistricts(res.data.districts)
+    })
+  },[])
+
+  // console.log(districts);
+  // console.log(upazilas);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,12 +89,14 @@ const Register = () => {
 
     const formData = {
       email,
-      pass,
       name,
       mainPhotoUrl,
       blood,
+      district,
+      upazila,
     };
 
+    
     if (res.data.success == true) {
       registerWithEmailPassword(email, pass)
         .then((userCredential) => {
@@ -189,6 +212,41 @@ const Register = () => {
                 <option value="AB-">AB-</option>
                 <option value="O+">O+</option>
                 <option value="O-">O-</option>
+              </select>
+
+
+              <label className="text-[15px]">District</label>
+              <select
+                value={district}
+                onChange={e=>setDistrict(e.target.value)}
+                required
+                className="select w-full"
+              >
+                <option value="" disabled>
+                  Select Your District
+                </option>
+                {
+                  districts.map((d,index)=>{
+                    return <option key={index} value="d?.name">{d?.name}</option>
+                  })
+                }
+              </select>
+
+              <label className="text-[15px]">Upazila</label>
+              <select
+                value={upazila}
+                onChange={e=>setUpazila(e.target.value)}
+                required
+                className="select w-full"
+              >
+                <option value="" disabled>
+                  Select Your Upazila
+                </option>
+                {
+                  upazilas.map(u=>{
+                    return <option key={u?.id} value={u?.name}>{u?.name}</option>
+                  })
+                }
               </select>
 
               <label className="text-[15px]">Password</label>

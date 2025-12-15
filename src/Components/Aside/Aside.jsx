@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import {
   Home,
   Users,
@@ -8,16 +8,22 @@ import {
   CirclePlus,
   ChartNoAxesGantt
 } from "lucide-react";
+import { signOut } from "firebase/auth";
+import auth from "../../firebase/firebase.config";
 
 const Aside= () => {
   const menuItems = [
     { name: "Dashboard", path: "/dashboard/main", icon: <Home size={20} /> },
-    { name: "Add Product", path: "/dashboard/add-product", icon: <CirclePlus size={20} /> },
+    { name: "Add Request", path: "add-request", icon: <CirclePlus size={20} /> },
     { name: "Manage Products", path: "/dashboard/manage-product", icon: <ChartNoAxesGantt size={20} /> },
     { name: "Users", path: "/dashboard/users", icon: <Users size={20} /> },
     { name: "Settings", path: "/dashboard/settings", icon: <Settings size={20} /> },
     { name: "Main", path: "/", icon: <ArrowBigLeft size={20} /> }
   ];
+
+    const logout = () => {
+    signOut(auth);
+  };
 
   return (
     <aside className="w-64 min-h-screen bg-slate-900 text-white flex flex-col">
@@ -45,10 +51,10 @@ const Aside= () => {
       </nav>
 
       {/* Logout */}
-      <button className="m-4 flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-600 transition">
+      <Link onClick={logout} className="m-4 flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-600 transition">
         <LogOut size={20} />
         Logout
-      </button>
+      </Link>
     </aside>
   );
 };

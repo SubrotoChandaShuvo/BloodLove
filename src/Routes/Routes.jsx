@@ -5,8 +5,8 @@ import Register from "../Pages/Register";
 import Login from "../Pages/Login";
 import DasboardLayout from "../DashboardLayout/DasboardLayout";
 import MainDashboard from "../Pages/Dashboard/MainDashboard/MainDashboard";
-import AddProduct from "../Pages/Dashboard/AddProduct/AddProduct";
 import ManageProduct from "../Pages/ManageProduct/ManageProduct";
+import AddRequest from "../Pages/Dashboard/AddRequest/AddRequest";
 
 
 const router = createBrowserRouter([
@@ -29,16 +29,16 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: '/dashboard',
+    path: 'dashboard',
     element:<DasboardLayout></DasboardLayout>,
     children:[
       {
-        path:'main',
+        path:'/dashboard',
         element:<MainDashboard/>
       },
       {
-        path:'add-product',
-        element:<AddProduct/>
+        path:'add-request',
+        element:<AddRequest/>
       },
       {
         path:'manage-product',
