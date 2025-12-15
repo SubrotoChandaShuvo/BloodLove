@@ -27,8 +27,10 @@ const Register = () => {
     const name = e.target.name.value;
     const photoUrl = e.target.photoUrl;
     const file = photoUrl.files[0];
+    const role= e.target.role.value;
 
-    console.log(file);
+    console.log(role);
+
 
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
@@ -72,7 +74,8 @@ const Register = () => {
       pass,
       name,
       mainPhotoUrl,
-    }
+      role
+    };
 
     if (res.data.success == true) {
       registerWithEmailPassword(email, pass)
@@ -89,15 +92,14 @@ const Register = () => {
                 draggable: true,
               });
               // store users info in our DB
-              axios.post('http://localhost:5001/users',formData)
-              .then(res=>{
-                console.log(res.data);
-                
-              })
-              .catch(err=>{
-                console.log(err);
-                
-              })
+              axios
+                .post("http://localhost:5001/users", formData)
+                .then((res) => {
+                  console.log(res.data);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
 
               // toast.success("Registration Successful! 🎉");
               // console.log(userCredential.user);
@@ -171,6 +173,13 @@ const Register = () => {
                 className="input w-full"
                 placeholder="Enter Your Photo"
               />
+
+              <select name="role" defaultValue="Choose Role" className="select w-full">
+                <option disabled={true}>Choose Role</option>
+                <option value="manager">Manager</option>
+                <option value="buyer">Buyer</option>
+              </select>
+
               <label className="text-[15px]">Password</label>
               <div className="relative">
                 <input
