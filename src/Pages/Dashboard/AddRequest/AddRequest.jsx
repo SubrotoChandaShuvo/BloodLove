@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
-import axios from "axios";
-import useAxios from "../../../hooks/useAxios";
+import axios from "axios"; 
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const AddRequest = () => {
   const { user } = useContext(AuthContext);
@@ -11,7 +11,7 @@ const AddRequest = () => {
   const [district, setDistrict] = useState("");
   const [upazila, setUpazila] = useState("");
 
-  const axiosInstance = useAxios()
+  const axiosSecure = useAxiosSecure()
 
   useEffect(() => {
     axios.get("/upazila.json").then((res) => {
@@ -48,7 +48,7 @@ const AddRequest = () => {
 
     console.log(formData);
 
-    axiosInstance.post("/request", formData)
+    axiosSecure.post("/request", formData)
       .then((res) => {
         alert(res.data.insertedId);
       })
