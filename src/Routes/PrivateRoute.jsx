@@ -3,7 +3,7 @@ import { AuthContext } from "../Provider/AuthProvider";
 import { Navigate } from "react-router";
 
 const PrivateRoute = ({ children }) => {
-  const { user, loading, roleLoading } = useContext(AuthContext);
+  const { user, loading, roleLoading, userStatus } = useContext(AuthContext);
 
   if (loading || roleLoading) {
     <div className="flex justify-center items-center min-h-screen">
@@ -11,7 +11,7 @@ const PrivateRoute = ({ children }) => {
     </div>;
   }
 
-  if(!user) {
+  if(!user || !userStatus=='active') {
     return <Navigate to={"/login"}></Navigate>;
   }
 

@@ -4,13 +4,26 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
   const [users, setUsers] = useState([]);
-  useEffect(() => {
+
+  const fetchUsers = ()=>{
     axiosSecure.get("/users").then((res) => {
       setUsers(res.data);
     });
-  }, [axiosSecure]);
+  }
 
-  console.log(users);
+  
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleStatusChange = (email, status) => {
+    axiosSecure
+      .patch(`/update/user/status?email=${email}&status=${status}`)
+      .then((res) => {
+        console.log(res.data);
+        fetchUsers();
+      });
+  };
 
   return (
     <div>
@@ -32,7 +45,7 @@ const AllUsers = () => {
           </thead>
           <tbody>
             {/* row 1 */}
-            {users?.map((user) => 
+            {users?.map((user) => (
               <tr>
                 <th>
                   <label>
@@ -52,15 +65,27 @@ const AllUsers = () => {
                     </div>
                   </div>
                 </td>
-                <td>
-                  {user?.role}
-                </td>
+                <td>{user?.role}</td>
                 <td>{user?.status}</td>
                 <th>
-                  <button className="btn btn-ghost btn-xs">details</button>
+                  {user?.status == "active" ? (
+                    <button
+                      onClick={() => handleStatusChange(user?.email, "blocked")}
+                      className="btn btn-error btn-xs"
+                    >
+                      Block
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleStatusChange(user?.email, "active")}
+                      className="btn btn-primary btn-xs"
+                    >
+                      Active
+                    </button>
+                  )}
                 </th>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
       </div>

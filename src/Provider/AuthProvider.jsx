@@ -18,6 +18,7 @@ const AuthProvider = ({ children }) => {
   const [roleLoading, setRoleLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [role, setRole] = useState("");
+  const [userStatus, setUserStatus] = useState('')
 
   const registerWithEmailPassword = (email, pass) => {
     // console.log(email, pass);
@@ -29,8 +30,6 @@ const AuthProvider = ({ children }) => {
   };
 
   console.log(user);
-  
-
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -40,22 +39,22 @@ const AuthProvider = ({ children }) => {
       // console.log(currentUser);
     });
 
-
     return () => {
       unsubscribe();
     };
   }, []);
 
-  useEffect(()=>{
-    if(!user) return;
-     axios.get(`http://localhost:5001/users/role/${user.email}`).then((res) => {
+  useEffect(() => {
+    if (!user) return;
+    axios.get(`http://localhost:5001/users/role/${user.email}`).then((res) => {
       setRole(res.data.role);
-      setRoleLoading(false)
-    })
-  },[user])
+      setUserStatus(res.data.status);
+      setRoleLoading(false);
+    });
+  }, [user]);
 
-// console.log(role);
 
+  // console.log(role);
 
   const authData = {
     registerWithEmailPassword,
@@ -65,11 +64,14 @@ const AuthProvider = ({ children }) => {
     setLoading,
     handleGoogleSignin,
     role,
-    roleLoading
+    roleLoading,
+    userStatus
   };
 
   // return <AuthContext value={authData}>{children}</AuthContext>;
-  return <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;
