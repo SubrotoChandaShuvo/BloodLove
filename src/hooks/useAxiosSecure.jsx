@@ -5,7 +5,7 @@ import { AuthContext } from "../Provider/AuthProvider";
 
 
 const axiosSecure = axios.create({
-    baseURL:'http://localhost:5000'
+    baseURL:'http://localhost:5001'
 })
 
 const useAxiosSecure = () =>{
@@ -13,7 +13,7 @@ const useAxiosSecure = () =>{
 
     useEffect(()=>{
         const reqInterceptor = axiosSecure.interceptors.request.use(config=>{
-            config.headers.Authorization = `Bearer ${user?.accessToken}`
+            config.headers.authorization = `Bearer ${user?.accessToken}`
             return config
         })
 
@@ -34,3 +34,4 @@ const useAxiosSecure = () =>{
 }
 
 export default useAxiosSecure;
+

@@ -7,6 +7,7 @@ import DasboardLayout from "../DashboardLayout/DasboardLayout";
 import MainDashboard from "../Pages/Dashboard/MainDashboard/MainDashboard";
 import ManageProduct from "../Pages/ManageProduct/ManageProduct";
 import AddRequest from "../Pages/Dashboard/AddRequest/AddRequest";
+import AllUsers from "../Pages/Dashboard/AllUsers/AllUsers";
 
 
 const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path:'add-request',
         element:<AddRequest/>
+      },
+      {
+        path:'all-users',
+        element:<AllUsers/>
       },
       {
         path:'manage-product',
