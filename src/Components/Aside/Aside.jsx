@@ -114,14 +114,14 @@ const Aside = () => {
         )}
 
         <NavLink
-          to="/dashboard/manage-product"
+          to="/dashboard/my-request"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-2 rounded-lg transition
             ${isActive ? "bg-blue-600" : "hover:bg-slate-800"}`
           }
         >
           <ChartNoAxesGantt size={20} />
-          Manage Products
+          My Request
         </NavLink>
 
         {role == "admin" && (
@@ -137,16 +137,6 @@ const Aside = () => {
           </NavLink>
         )}
 
-        <NavLink
-          to="/dashboard/settings"
-          className={({ isActive }) =>
-            `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-blue-600" : "hover:bg-slate-800"}`
-          }
-        >
-          <Settings size={20} />
-          Settings
-        </NavLink>
 
         <NavLink
           to="/"

@@ -227,7 +227,7 @@ const Register = () => {
                 </option>
                 {
                   districts.map((d,index)=>{
-                    return <option key={index} value="d?.name">{d?.name}</option>
+                    return <option key={index} value={d?.name}>{d?.name}</option>
                   })
                 }
               </select>

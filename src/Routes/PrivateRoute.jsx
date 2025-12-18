@@ -6,9 +6,9 @@ const PrivateRoute = ({ children }) => {
   const { user, loading, roleLoading, userStatus } = useContext(AuthContext);
 
   if (loading || roleLoading) {
-    <div className="flex justify-center items-center min-h-screen">
-      <span className="loading loading-infinity loading-xl"></span>
-    </div>;
+    return <div className="flex justify-center items-center min-h-screen">
+    <span className="loading loading-infinity w-24 h-24"></span>
+  </div>;
   }
 
   if(!user || !userStatus=='active') {

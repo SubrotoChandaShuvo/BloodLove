@@ -9,6 +9,7 @@ import ManageProduct from "../Pages/ManageProduct/ManageProduct";
 import AddRequest from "../Pages/Dashboard/AddRequest/AddRequest";
 import AllUsers from "../Pages/Dashboard/AllUsers/AllUsers";
 import PrivateRoute from "./PrivateRoute";
+import MyRequest from "../Pages/Dashboard/MyRequest/MyRequest";
 
 
 const router = createBrowserRouter([
@@ -47,8 +48,8 @@ const router = createBrowserRouter([
         element:<AllUsers/>
       },
       {
-        path:'manage-product',
-        element:<ManageProduct/>
+        path:'my-request',
+        element:<MyRequest/>
       }
     ]
   }
