@@ -59,7 +59,7 @@ const AddRequest = () => {
     <div className="flex justify-center p-6">
       <form
         onSubmit={handleSubmit}
-        className="card bg-base-200 border border-base-300 rounded-box w-full max-w-sm md:max-w-lg lg:max-w-2xl shrink-0 p-10 shadow-2xl transform transition-transform duration-300 hover:scale-105 shadow-gray-600 "
+        className="card bg-base-200 border border-base-300 rounded-box w-full max-w-sm md:max-w-lg lg:max-w-2xl shrink-0 p-10 shadow-2xl shadow-gray-600 "
       >
         <h2 className="text-2xl font-semibold text-center">
           Create Donation Request
