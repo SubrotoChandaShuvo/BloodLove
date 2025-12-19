@@ -14,12 +14,14 @@ import Donate from "../Pages/Donate/Donate";
 import PaymentSuccess from "../Pages/PaymentSucccess/PaymentSuccess";
 import PaymentCancel from "../Pages/PaymentCancel/PaymentCancel";
 import SearchRequest from "../Pages/SearchRequest/SearchRequest";
+import Error from "../Pages/Error/Error";
 
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout/>,
+    errorElement: <Error/>,
     children:[
         {
             path:'/',

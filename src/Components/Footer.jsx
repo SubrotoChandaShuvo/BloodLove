@@ -3,16 +3,18 @@ import logo from "../assets/Logo.png";
 
 const Footer = () => {
   return (
-    <footer className="bg-base-200 text-base-content mt-16">
+    <footer className="bg-base-200 text-base-content mt-2">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
 
         {/* Logo & Description */}
         <div>
+        <Link to={'/'}>
           <img
             src={logo}
             alt="Blood Love Logo"
             className="h-12 mb-4 rounded-lg"
           />
+          </Link>
           <p className="text-sm leading-relaxed">
             <span className="font-semibold">Blood Love</span> is a platform
             dedicated to saving lives by connecting blood donors with people in
