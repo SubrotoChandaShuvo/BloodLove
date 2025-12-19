@@ -4,7 +4,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 const MyRequest = () => {
   const [myRequests, setMyRequests] = useState([]);
   const [totalRequests, setTotalRequests] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
   const axiosSecure = useAxiosSecure();

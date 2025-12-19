@@ -1,8 +1,8 @@
-import React from "react";
+
 import { Outlet } from "react-router";
 import Aside from "../Components/Aside/Aside";
 
-const DasboardLayout = () => {
+const DashboardLayout = () => {
   return (
     <div className="min-h-screen">
       <Aside />
@@ -14,4 +14,4 @@ const DasboardLayout = () => {
   );
 };
 
-export default DasboardLayout;
+export default DashboardLayout;

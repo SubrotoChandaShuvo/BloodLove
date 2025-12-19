@@ -46,7 +46,7 @@ import { AuthContext } from "../../Provider/AuthProvider";
 //             to={item.path}
 //             className={({ isActive }) =>
 //               `flex items-center gap-3 px-4 py-2 rounded-lg transition
-//               ${isActive ? "bg-blue-600" : "hover:bg-slate-800"}`
+//               ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
 //             }
 //           >
 //             {item.icon}
@@ -90,10 +90,10 @@ const Aside = () => {
       {/* Menu */}
       <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         <NavLink
-          to="/dashboard"
+          to="/dashboard/main"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-blue-600" : "hover:bg-slate-800"}`
+            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
           }
         >
           <Home size={20} />
@@ -105,7 +105,7 @@ const Aside = () => {
             to="add-request"
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-blue-600" : "hover:bg-slate-800"}`
+            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
             }
           >
             <CirclePlus size={20} />
@@ -117,7 +117,7 @@ const Aside = () => {
           to="/dashboard/my-request"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-blue-600" : "hover:bg-slate-800"}`
+            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
           }
         >
           <ChartNoAxesGantt size={20} />
@@ -129,7 +129,7 @@ const Aside = () => {
             to="/dashboard/all-users"
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-blue-600" : "hover:bg-slate-800"}`
+            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
             }
           >
             <Users size={20} />
@@ -142,11 +142,11 @@ const Aside = () => {
           to="/"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-blue-600" : "hover:bg-slate-800"}`
+            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
           }
         >
           <ArrowBigLeft size={20} />
-          Main
+          Go Home
         </NavLink>
       </nav>
 
