@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { AuthContext } from "../Provider/AuthProvider";
 import { signOut } from "firebase/auth";
 import auth from "../firebase/firebase.config";
+import logo from "../assets/Logo.png"
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
@@ -47,7 +48,11 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <Link to={'/'} className="inline-block">
+     <div className="ml-7 rounded-lg">
+            <img  src={logo} className="h-12 shadow-2xl rounded-lg hover:scale-105 transition-transform" alt="" />
+            </div>
+          </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
