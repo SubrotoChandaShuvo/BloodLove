@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import { AuthContext } from "../Provider/AuthProvider";
 import { signOut } from "firebase/auth";
 import auth from "../firebase/firebase.config";
-import logo from "../assets/Logo.png"
+import logo from "../assets/Logo.png";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
@@ -11,78 +11,97 @@ const Navbar = () => {
   const logout = () => {
     signOut(auth);
   };
+
   return (
     <div>
       <div className="navbar bg-base-100 shadow-sm">
+
+        {/* LEFT */}
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                {" "}
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />{" "}
-              </svg>
+              ☰
             </div>
-            <ul
-              tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-            >
+
+            {/* MOBILE MENU */}
+            <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
               <li>
-                <Link>All Request</Link>
+                <NavLink to="/" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                  Home
+                </NavLink>
               </li>
               <li>
-                <Link to={'/search'}>Search</Link>
+                <NavLink to="/requests" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                  All Request
+                </NavLink>
               </li>
               <li>
-                <Link to={'/donate'}>Donate</Link>
+                <NavLink to="/search" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                  Search
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/donate" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                  Donate
+                </NavLink>
               </li>
             </ul>
           </div>
-          <Link to={'/'} className="inline-block">
-     <div className="ml-7 rounded-lg">
-            <img  src={logo} className="h-12 shadow-2xl rounded-lg hover:scale-105 transition-transform" alt="" />
-            </div>
+
+          <Link to="/" className="inline-block ml-7">
+            <img src={logo} className="h-12 rounded-lg" alt="logo" />
           </Link>
         </div>
+
+        {/* CENTER (DESKTOP) */}
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <Link>All Request</Link>
+              <NavLink to="/" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                Home
+              </NavLink>
             </li>
             <li>
-              <Link to={'/search'}>Search</Link>
+              <NavLink to="/requests" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                All Request
+              </NavLink>
             </li>
             <li>
-              <Link to={'/donate'}>Donate</Link>
+              <NavLink to="/search" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                Search
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/donate" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                Donate
+              </NavLink>
             </li>
           </ul>
         </div>
+
+        {/* RIGHT */}
         <div className="navbar-end">
-          {user && (
-            <Link to="/dashboard/main" className="btn mr-2">
+          {user ? (
+            <Link to="/dashboard/main" className="btn btn-neutral mr-2">
               Dashboard
             </Link>
-          )}
-          {user ? (
-            <Link onClick={logout} className="btn">
-              Logout
-            </Link>
           ) : (
-            <Link to={"/login"} className="btn">
+            <Link to="/register" className="btn btn-neutral mr-2">
+              SignUp
+            </Link>
+          )}
+
+          {user ? (
+            <button onClick={logout} className="btn btn-neutral">
+              Logout
+            </button>
+          ) : (
+            <Link to="/login" className="btn btn-neutral">
               Login
             </Link>
           )}
         </div>
+
       </div>
     </div>
   );

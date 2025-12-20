@@ -7,38 +7,39 @@ const SearchRequest = () => {
   const [districts, setDistricts] = useState([]);
   const [district, setDistrict] = useState("");
   const [upazila, setUpazila] = useState("");
+  const [lists, setLists] = useState([]);
 
   const axiosInstance = useAxios();
 
   useEffect(() => {
-    axios.get("/upazila.json").then((res) => {
-      setUpazilas(res.data.upazilas);
-    });
-
-    axios.get("/district.json").then((res) => {
-      setDistricts(res.data.districts);
-    });
+    axios.get("/upazila.json").then((res) => setUpazilas(res.data.upazilas));
+    axios.get("/district.json").then((res) => setDistricts(res.data.districts));
   }, []);
 
-  const handleSearch = (e)=>{
+  const handleSearch = (e) => {
     e.preventDefault();
     const bloodGroup = e.target.blood.value;
-    axiosInstance.get(`/search-requests?bloodGroup=${bloodGroup}&district=${district}&upazila=${upazila}`)
-    .then(res=>{
-        console.log(res.data);
-        
-    })
+    axiosInstance
+      .get(
+        `/search-requests?bloodGroup=${bloodGroup}&district=${district}&upazila=${upazila}`
+      )
+      .then((res) => setLists(res.data))
+      .catch((err) => console.log(err));
+  };
 
-
-  }
+  const handleReset = () => {
+    setLists([]);
+    setDistrict("");
+    setUpazila("");
+    const form = document.querySelector("form");
+    if (form) form.reset();
+  };
 
   return (
     <div>
       <form className="fieldset flex justify-center mt-8" onSubmit={handleSearch}>
-        <select name="blood" defaultValue="" className="select ">
-          <option value="" disabled>
-            Select Blood Group
-          </option>
+        <select name="blood" defaultValue="" className="select">
+          <option value="" disabled>Select Blood Group</option>
           <option value="A+">A+</option>
           <option value="A-">A-</option>
           <option value="B+">B+</option>
@@ -49,43 +50,53 @@ const SearchRequest = () => {
           <option value="O-">O-</option>
         </select>
 
-        {/* <label className="text-[15px]">District</label> */}
-        <select
-          value={district}
-          onChange={(e) => setDistrict(e.target.value)}
-          className="select"
-        >
-          <option value="" disabled>
-            Select Your District
-          </option>
-          {districts.map((d, index) => {
-            return (
-              <option key={index} value={d?.name}>
-                {d?.name}
-              </option>
-            );
-          })}
+        <select value={district} onChange={(e) => setDistrict(e.target.value)} className="select">
+          <option value="" disabled>Select Your District</option>
+          {districts.map((d, index) => (
+            <option key={index} value={d?.name}>{d?.name}</option>
+          ))}
         </select>
 
-        {/* <label className="text-[15px]">Upazila</label> */}
-        <select
-          value={upazila}
-          onChange={(e) => setUpazila(e.target.value)}
-          className="select"
-        >
-          <option value="" disabled>
-            Select Your Upazila
-          </option>
-          {upazilas.map((u) => {
-            return (
-              <option key={u?.id} value={u?.name}>
-                {u?.name}
-              </option>
-            );
-          })}
+        <select value={upazila} onChange={(e) => setUpazila(e.target.value)} className="select">
+          <option value="" disabled>Select Your Upazila</option>
+          {upazilas.map((u) => (
+            <option key={u?.id} value={u?.name}>{u?.name}</option>
+          ))}
         </select>
-        <button className="btn" type="submit">Search</button>
+
+        <button className="btn btn-primary" type="submit">Search</button>
+        <button className="btn btn-error" type="button" onClick={handleReset}>Reset</button>
       </form>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 m-6">
+        {lists
+          .filter((item) => item.status !== "blocked")
+          .map((item) => (
+            <div
+              key={item._id}
+              className="card bg-base-100 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            >
+              <div className="card-body">
+                <div className="flex justify-center mb-2">
+                  <img
+                    src={item.mainPhotoUrl}
+                    alt={item.name}
+                    className="h-24 w-24 rounded-full object-cover shadow-md"
+                  />
+                </div>
+                <h2 className="card-title text-red-500 text-center">{item.name}</h2>
+                <p className="text-xl font-bold">Blood Group: {item.blood}</p>
+                <p><span className="font-semibold">Role:</span> {item.role}</p>
+                <p><span className="font-semibold">District:</span> {item.district}</p>
+                <p><span className="font-semibold">Upazila:</span> {item.upazila}</p>
+                <p><span className="font-semibold">Email:</span> {item.email}</p>
+                <div className="card-actions justify-end mt-2">
+                  <button className="btn btn-sm btn-primary text-white">View Profile</button>
+                </div>
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 };

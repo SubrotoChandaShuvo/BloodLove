@@ -19,32 +19,30 @@ const Register = () => {
   const navigate = useNavigate();
 
   const [showPass, setShowPass] = useState(false);
-  
-  const [upazilas, setUpazilas]=useState([])
-  const [districts, setDistricts]=useState([])
-  const [district, setDistrict]=useState('')
-  const [upazila, setUpazila]=useState('')
 
-  useEffect(()=>{
-    axios.get('/upazila.json')
-    .then(res=>{
-      setUpazilas(res.data.upazilas)
-    })
+  const [upazilas, setUpazilas] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [district, setDistrict] = useState("");
+  const [upazila, setUpazila] = useState("");
 
-    axios.get('/district.json')
-    .then(res=>{
-      setDistricts(res.data.districts)
-    })
-  },[])
+  useEffect(() => {
+    axios.get("/upazila.json").then((res) => {
+      setUpazilas(res.data.upazilas);
+    });
+
+    axios.get("/district.json").then((res) => {
+      setDistricts(res.data.districts);
+    });
+  }, []);
 
   // console.log(districts);
   // console.log(upazilas);
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const pass = e.target.password.value;
+    const confirmPass = e.target.confirmPassword.value;
     const name = e.target.name.value;
     const photoUrl = e.target.photoUrl;
     const file = photoUrl.files[0];
@@ -52,27 +50,42 @@ const Register = () => {
 
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
-    if (pass.length < 6) {
+    if (pass.length < 6 || confirmPass.length < 6) {
       return Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "Less then 6 characters!",
       });
     }
-    if (!uppercase.test(pass)) {
+    if (!uppercase.test(pass) || !uppercase.test(confirmPass)) {
       return Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "Need a Uppercase Latter!",
       });
     }
-    if (!lowercase.test(pass)) {
+    if (!lowercase.test(pass) || !lowercase.test(confirmPass)) {
       return Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "Need a lowercase Latter!",
       });
     }
+    if (pass != confirmPass) {
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Password and Confirm Password are not same!",
+      });
+    }
+
+    Swal.fire({
+      title: "Please wait...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
     const res = await axios.post(
       `https://api.imgbb.com/1/upload?key=f597642f9c8f007109a3f030821c0edb`,
@@ -96,7 +109,6 @@ const Register = () => {
       upazila,
     };
 
-    
     if (res.data.success == true) {
       registerWithEmailPassword(email, pass)
         .then((userCredential) => {
@@ -214,39 +226,42 @@ const Register = () => {
                 <option value="O-">O-</option>
               </select>
 
-
               <label className="text-[15px]">District</label>
               <select
                 value={district}
-                onChange={e=>setDistrict(e.target.value)}
+                onChange={(e) => setDistrict(e.target.value)}
                 required
                 className="select w-full"
               >
                 <option value="" disabled>
                   Select Your District
                 </option>
-                {
-                  districts.map((d,index)=>{
-                    return <option key={index} value={d?.name}>{d?.name}</option>
-                  })
-                }
+                {districts.map((d, index) => {
+                  return (
+                    <option key={index} value={d?.name}>
+                      {d?.name}
+                    </option>
+                  );
+                })}
               </select>
 
               <label className="text-[15px]">Upazila</label>
               <select
                 value={upazila}
-                onChange={e=>setUpazila(e.target.value)}
+                onChange={(e) => setUpazila(e.target.value)}
                 required
                 className="select w-full"
               >
                 <option value="" disabled>
                   Select Your Upazila
                 </option>
-                {
-                  upazilas.map(u=>{
-                    return <option key={u?.id} value={u?.name}>{u?.name}</option>
-                  })
-                }
+                {upazilas.map((u) => {
+                  return (
+                    <option key={u?.id} value={u?.name}>
+                      {u?.name}
+                    </option>
+                  );
+                })}
               </select>
 
               <label className="text-[15px]">Password</label>
@@ -254,6 +269,25 @@ const Register = () => {
                 <input
                   required
                   name="password"
+                  type={showPass ? "text" : "password"}
+                  className="input w-full pr-10"
+                  placeholder="Password"
+                  aria-label="password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-xl text-gray-500"
+                  aria-label={showPass ? "Hide password" : "Show password"}
+                >
+                  {showPass ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+              <label className="text-[15px]">Confirm Password</label>
+              <div className="relative">
+                <input
+                  required
+                  name="confirmPassword"
                   type={showPass ? "text" : "password"}
                   className="input w-full pr-10"
                   placeholder="Password"
