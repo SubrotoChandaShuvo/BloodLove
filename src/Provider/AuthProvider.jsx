@@ -15,7 +15,7 @@ const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
-  const [roleLoading, setRoleLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [role, setRole] = useState("");
   const [userStatus, setUserStatus] = useState('')
@@ -44,14 +44,52 @@ const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (!user) return;
-    axios.get(`http://localhost:5001/users/role/${user.email}`).then((res) => {
+  // useEffect(() => {
+  //   if (!user) return;
+  //   axios.get(`http://localhost:5001/users/role/${user.email}`).then((res) => {
+  //     setRole(res.data.role);
+  //     setUserStatus(res.data.status);
+  //     setRoleLoading(true);
+  //   });
+  // }, [user]);
+
+
+ useEffect(() => {
+  // If user is NOT logged in
+  if (!user) {
+    setRole("");
+    setUserStatus("");
+    setRoleLoading(false);
+    return;
+  }
+
+  // If user IS logged in
+  setRoleLoading(true);
+
+  const controller = new AbortController();
+
+  axios
+    .get(`http://localhost:5001/users/role/${user.email}`, {
+      signal: controller.signal,
+    })
+    .then((res) => {
       setRole(res.data.role);
       setUserStatus(res.data.status);
+    })
+    .catch((err) => {
+      if (err.name !== "CanceledError") {
+        console.error(err);
+        setRole("");
+        setUserStatus("");
+      }
+    })
+    .finally(() => {
       setRoleLoading(false);
     });
-  }, [user]);
+
+  // Cleanup to prevent cascading renders
+  return () => controller.abort();
+}, [user]);
 
 
   // console.log(role);

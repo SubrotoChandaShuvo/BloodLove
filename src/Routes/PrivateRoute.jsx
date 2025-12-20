@@ -1,18 +1,37 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
-import { Navigate } from "react-router";
+import { Navigate, useLocation } from "react-router";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading, roleLoading, userStatus } = useContext(AuthContext);
+  const location = useLocation();
 
-  if (loading || roleLoading) {
-    return <div className="flex justify-center items-center min-h-screen">
-    <span className="loading loading-infinity w-24 h-24"></span>
-  </div>;
+  // 1️⃣ Wait for Firebase auth to resolve
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-infinity w-24 h-24"></span>
+      </div>
+    );
   }
 
-  if(!user || !userStatus=='active') {
-    return <Navigate to={"/login"}></Navigate>;
+  // 2️⃣ After auth resolved — user not logged in
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // 3️⃣ User exists — wait for role
+  if (roleLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-infinity w-24 h-24"></span>
+      </div>
+    );
+  }
+
+  // 4️⃣ User inactive
+  if (userStatus !== "active") {
+    return <Navigate to="/login" replace />;
   }
 
   return children;

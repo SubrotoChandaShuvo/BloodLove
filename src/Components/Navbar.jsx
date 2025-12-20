@@ -4,13 +4,30 @@ import { AuthContext } from "../Provider/AuthProvider";
 import { signOut } from "firebase/auth";
 import auth from "../firebase/firebase.config";
 import logo from "../assets/Logo.png";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
 
-  const logout = () => {
-    signOut(auth);
-  };
+const logout = () => {
+  signOut(auth)
+    .then(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Logged out!',
+        text: 'You have been successfully logged out.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+      });
+    })
+    .catch((error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `Something went wrong: ${error.message}`,
+      });
+    });
+};
 
   return (
     <div>

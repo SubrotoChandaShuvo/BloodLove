@@ -37,8 +37,8 @@ const SearchRequest = () => {
 
   return (
     <div>
-      <form className="fieldset flex justify-center mt-8" onSubmit={handleSearch}>
-        <select name="blood" defaultValue="" className="select">
+      <form className="fieldset lg:flex justify-center mx-4 lg:mx-18 mt-8" onSubmit={handleSearch}>
+        <select name="blood" defaultValue="" className="select w-full">
           <option value="" disabled>Select Blood Group</option>
           <option value="A+">A+</option>
           <option value="A-">A-</option>
@@ -50,14 +50,14 @@ const SearchRequest = () => {
           <option value="O-">O-</option>
         </select>
 
-        <select value={district} onChange={(e) => setDistrict(e.target.value)} className="select">
+        <select value={district} onChange={(e) => setDistrict(e.target.value)} className="select w-full">
           <option value="" disabled>Select Your District</option>
           {districts.map((d, index) => (
             <option key={index} value={d?.name}>{d?.name}</option>
           ))}
         </select>
 
-        <select value={upazila} onChange={(e) => setUpazila(e.target.value)} className="select">
+        <select value={upazila} onChange={(e) => setUpazila(e.target.value)} className="select w-full">
           <option value="" disabled>Select Your Upazila</option>
           {upazilas.map((u) => (
             <option key={u?.id} value={u?.name}>{u?.name}</option>
