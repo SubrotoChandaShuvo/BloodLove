@@ -38,7 +38,7 @@ const Footer = () => {
             </li>
             <li>
               <Link to="/donate" className="link link-hover">
-                Donate Blood
+                Donate Money
               </Link>
             </li>
             <li>

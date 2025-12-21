@@ -15,66 +15,91 @@ import PaymentSuccess from "../Pages/PaymentSucccess/PaymentSuccess";
 import PaymentCancel from "../Pages/PaymentCancel/PaymentCancel";
 import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 import Error from "../Pages/Error/Error";
-
+import AllRequest from "../Pages/AllRequest/AllRequest";
+import Profile from "../Pages/Dashboard/Profile/Profile";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout/>,
-    errorElement: <Error/>,
-    children:[
-        {
-            path:'/',
-            Component: Home
-        },
-        {
-          path:"/register",
-          element: <Register/>
-        },
-        {
-          path:"/donate",
-          element: <PrivateRoute><Donate/></PrivateRoute>
-        },
-        {
-          path:"/payment-success",
-          element: <PaymentSuccess/>
-        },
-        {
-          path:"/payment-cancelled",
-          element: <PaymentCancel/>
-        },
-        {
-          path:"/search",
-          element: <PrivateRoute><SearchRequest/></PrivateRoute>
-        },
-        {
-          path: '/login',
-          element: <Login/>
-        }
-    ]
+    element: <RootLayout />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: "/",
+        Component: Home,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/donate",
+        element: (
+          <PrivateRoute>
+            <Donate />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/payment-success",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/payment-cancelled",
+        element: <PaymentCancel />,
+      },
+      {
+        path: "/all-request",
+        element: <AllRequest />,
+      },
+      {
+        path: "/search",
+        element: (
+          <PrivateRoute>
+            <SearchRequest />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      }
+    ],
   },
   {
-    path: 'dashboard',
-    element:<PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
-    children:[
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
+    children: [
       {
-        path:'/dashboard/main',
-        element:<MainDashboard/>
+        path: "main",
+        element: <MainDashboard />,
       },
       {
-        path:'add-request',
-        element:<AddRequest/>
+        path: "add-request",
+        element: <AddRequest />,
       },
       {
-        path:'all-users',
-        element:<AllUsers/>
+        path: "all-users",
+        element: <AllUsers />,
       },
       {
-        path:'my-request',
-        element:<MyRequest/>
-      }
-    ]
-  }
+        path: "my-request",
+        element: <MyRequest />,
+      },
+      {
+        path: "profile",
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        )
+      },
+    ],
+  },
 ]);
 
 export default router;

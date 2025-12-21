@@ -1,6 +1,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate, Navigate } from "react-router";
 import auth from "../firebase/firebase.config";
 import { AuthContext } from "../Provider/AuthProvider";
 import { FcGoogle } from "react-icons/fc";
@@ -8,17 +8,16 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const Login = () => {
-  const {
-    setUser,
-    // handleGoogleSignin,
-    loading,
-    setLoading,
-  } = useContext(AuthContext);
+  const { user, setUser, setLoading } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [showPass, setShowPass] = useState(false);
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,75 +33,37 @@ const Login = () => {
           icon: "success",
           draggable: true,
         });
-        // toast.success("Login Successful! 🎉");
         setUser(user);
         setLoading(false);
-        navigate(location.state ? location.state : "/");
+        const from = location.state?.from?.pathname || "/";
+        navigate(from, { replace: true });
       })
       .catch((error) => {
         console.log(error);
-        // toast.error("Login failed❗ Please try again.");
+        setLoading(false);
       });
-
-    if (loading) {
-      return (
-        <div className="flex justify-center pt-10">
-          <span className="loading loading-spinner text-neutral loading-lg scale-250"></span>
-        </div>
-      );
-    }
   };
-
-  // const googleSignin = () => {
-  //   handleGoogleSignin()
-  //     .then((result) => {
-  //       const user = result.user;
-  //       setUser(user);
-  //       setLoading(false);
-  //       Swal.fire({
-  //         title: "Login Successful! 🎉",
-  //         icon: "success",
-  //         draggable: true,
-  //       });
-  //       // toast.success("Login Successful! 🎉");
-  //       navigate(location.state ? location.state : "/");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-
-  //   if (loading) {
-  //     return (
-  //       <div className="flex justify-center pt-10">
-  //         <span className="loading loading-spinner text-neutral loading-lg scale-250"></span>
-  //       </div>
-  //     );
-  //   }
-  // };
 
   const handleForget = () => {
     navigate(`/forget/${email}`);
   };
 
   return (
-    <div className="">
+    <div>
       <title>Login</title>
       <div className="hero min-h-lvw lg:min-h-screen p-4 md:p-0">
         <div className="card bg-base-100 w-full max-w-sm md:max-w-md lg:max-w-lg shrink-0 shadow-2xl transform transition-transform duration-300 hover:scale-105 shadow-gray-600">
           <div className="card-body">
-            <form onSubmit={handleSubmit} className="fieldset ">
+            <form onSubmit={handleSubmit} className="fieldset">
               <h1 className="text-3xl text-center">Login</h1>
               <label className="text-[15px]">Email</label>
               <input
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                onChange={(e) => setEmail(e.target.value)}
                 name="email"
                 type="email"
                 className="input w-full"
                 placeholder="Email"
               />
-
               <label className="text-[15px]">Password</label>
               <div className="relative">
                 <input
@@ -121,31 +82,20 @@ const Login = () => {
                   {showPass ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-
               <div>
                 <button onClick={handleForget} className="link link-hover">
                   Forgot password?
                 </button>
               </div>
-              <div className="">
+              <div>
                 <span className="pr-4">Don't have an account? </span>
-                <Link
-                  className="link link-hover text-blue-500"
-                  to={"/register"}
-                >
+                <Link className="link link-hover text-blue-500" to={"/register"}>
                   Register
                 </Link>
               </div>
               <button className="btn btn-primary transform transition-transform duration-300 hover:scale-102">
                 Login
               </button>
-              {/* <p className="text-center">Or Login with Google</p>
-              <button
-                onClick={googleSignin}
-                className="btn transform transition-transform duration-300 hover:scale-102 bg-gray-300"
-              >
-                <FcGoogle className="text-2xl" /> Google
-              </button> */}
             </form>
           </div>
         </div>

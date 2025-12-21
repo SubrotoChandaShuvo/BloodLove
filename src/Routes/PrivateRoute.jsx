@@ -6,6 +6,10 @@ const PrivateRoute = ({ children }) => {
   const { user, loading, roleLoading, userStatus } = useContext(AuthContext);
   const location = useLocation();
 
+  // console.log(userStatus);
+  // console.log(loading);
+  // console.log(roleLoading);
+
   // 1️⃣ Wait for Firebase auth to resolve
   if (loading) {
     return (
@@ -28,6 +32,8 @@ const PrivateRoute = ({ children }) => {
       </div>
     );
   }
+
+  // console.log("hello");
 
   // 4️⃣ User inactive
   if (userStatus !== "active") {

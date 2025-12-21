@@ -15,10 +15,10 @@ const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
-  const [roleLoading, setRoleLoading] = useState(false);
+  const [roleLoading, setRoleLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [role, setRole] = useState("");
-  const [userStatus, setUserStatus] = useState('')
+  const [userStatus, setUserStatus] = useState(null);
 
   const registerWithEmailPassword = (email, pass) => {
     // console.log(email, pass);
@@ -33,6 +33,8 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      console.log(currentUser);
+
       setUser(currentUser);
       setLoading(false);
 
@@ -53,44 +55,36 @@ const AuthProvider = ({ children }) => {
   //   });
   // }, [user]);
 
+  useEffect(() => {
+    setRoleLoading(true);
 
- useEffect(() => {
-  // If user is NOT logged in
-  if (!user) {
-    setRole("");
-    setUserStatus("");
-    setRoleLoading(false);
-    return;
-  }
+    const controller = new AbortController();
 
-  // If user IS logged in
-  setRoleLoading(true);
+    if (user) {
+      axios
+        .get(`http://localhost:5001/users/role/${user.email}`, {
+          signal: controller.signal,
+        })
+        .then((res) => {
+          setRole(res.data.role);
+          // console.log(res.data);
+          setUserStatus(res.data.status);
+        })
+        .catch((err) => {
+          if (err.name !== "CanceledError") {
+            console.error(err);
+            setRole("");
+            setUserStatus("");
+          }
+        })
+        .finally(() => {
+          setRoleLoading(false);
+        });
+    }
 
-  const controller = new AbortController();
-
-  axios
-    .get(`http://localhost:5001/users/role/${user.email}`, {
-      signal: controller.signal,
-    })
-    .then((res) => {
-      setRole(res.data.role);
-      setUserStatus(res.data.status);
-    })
-    .catch((err) => {
-      if (err.name !== "CanceledError") {
-        console.error(err);
-        setRole("");
-        setUserStatus("");
-      }
-    })
-    .finally(() => {
-      setRoleLoading(false);
-    });
-
-  // Cleanup to prevent cascading renders
-  return () => controller.abort();
-}, [user]);
-
+    // Cleanup to prevent cascading renders
+    return () => controller.abort();
+  }, [user]);
 
   // console.log(role);
 
@@ -103,7 +97,7 @@ const AuthProvider = ({ children }) => {
     handleGoogleSignin,
     role,
     roleLoading,
-    userStatus
+    userStatus,
   };
 
   // return <AuthContext value={authData}>{children}</AuthContext>;

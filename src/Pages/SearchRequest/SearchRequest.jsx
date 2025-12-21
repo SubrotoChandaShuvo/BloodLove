@@ -91,7 +91,7 @@ const SearchRequest = () => {
                 <p><span className="font-semibold">Upazila:</span> {item.upazila}</p>
                 <p><span className="font-semibold">Email:</span> {item.email}</p>
                 <div className="card-actions justify-end mt-2">
-                  <button className="btn btn-sm btn-primary text-white">View Profile</button>
+                  <button className="btn btn-sm btn-primary text-white">View Details</button>
                 </div>
               </div>
             </div>

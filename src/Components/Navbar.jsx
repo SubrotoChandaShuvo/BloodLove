@@ -48,7 +48,7 @@ const logout = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/requests" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                <NavLink to="/all-request" className={({ isActive }) => isActive ? "text-red-500" : ""}>
                   All Request
                 </NavLink>
               </li>
@@ -79,7 +79,7 @@ const logout = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/requests" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+              <NavLink to="/all-request" className={({ isActive }) => isActive ? "text-red-500" : ""}>
                 All Request
               </NavLink>
             </li>
