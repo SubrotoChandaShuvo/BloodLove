@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { AuthContext } from "../../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 const MyRequest = () => {
   const axiosSecure = useAxiosSecure();
+  const { role } = useContext(AuthContext);
 
   const [myRequests, setMyRequests] = useState([]);
   const [totalRequests, setTotalRequests] = useState(0);
@@ -12,14 +15,14 @@ const MyRequest = () => {
 
   const itemsPerPage = 10;
 
-  useEffect(() => {
+  const fetchRequests = () => {
     setLoading(true);
 
     axiosSecure
       .get(
         `/my-request?page=${
           currentPage - 1
-        }&size=${itemsPerPage}&status=${status}`
+        }&size=${itemsPerPage}&status=${status}&role=${role}`
       )
       .then((res) => {
         setMyRequests(res.data.request || []);
@@ -27,24 +30,50 @@ const MyRequest = () => {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [axiosSecure, currentPage, itemsPerPage, status]);
+  };
+
+  useEffect(() => {
+    fetchRequests();
+  }, [currentPage, status, role]);
+
+  const handleStatusUpdate = (id, newStatus) => {
+    Swal.fire({
+      title: "Change request status?",
+      text: `Set status to "${newStatus}"`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#16a34a",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, update",
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+         axiosSecure
+              .patch(`/updateRequest/user/status?requestId=${id}&status=${newStatus}`)
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: `Request marked as ${newStatus}`,
+                });
+                fetchRequests()
+              })
+              .catch(() =>
+                Swal.fire({ icon: "error", title: "Failed to update status" })
+              );
+      }
+    });
+  };
 
   const numberOfPages = Math.ceil(totalRequests / itemsPerPage);
   const pages = [...Array(numberOfPages).keys()].map((n) => n + 1);
 
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < pages.length) setCurrentPage(currentPage + 1);
-  };
-
   return (
     <div className="p-6">
-      {/* Filter */}
+      {/* Header & Filter */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">My Donation Requests</h2>
+        <h2 className="text-2xl font-semibold">
+          {role === "admin" ? "All Donation Requests" : "My Donation Requests"}
+        </h2>
 
         <select
           className="select select-bordered"
@@ -68,11 +97,12 @@ const MyRequest = () => {
           <thead>
             <tr>
               <th>No.</th>
-              <th>Recipient Name</th>
+              <th>Recipient</th>
               <th>Hospital</th>
-              <th>Blood Group</th>
+              <th>Blood</th>
               <th>Date</th>
               <th>Status</th>
+              {role === "admin" && <th>Action</th>}
             </tr>
           </thead>
 
@@ -94,34 +124,56 @@ const MyRequest = () => {
             )}
 
             {!loading &&
-              myRequests.map((request, index) => (
-                <tr key={request._id}>
-                  <th>{(currentPage - 1) * itemsPerPage + index + 1}</th>
-                  <td>{request.recipientName}</td>
-                  <td>{request.hospitalName}</td>
-                  <td>{request.bloodGroup}</td>
-                  <td>{request.donationDate}</td>
+              myRequests.map((req, index) => (
+                <tr key={req._id}>
+                  <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                  <td>{req.recipientName}</td>
+                  <td>{req.hospitalName}</td>
+                  <td>{req.bloodGroup}</td>
+                  <td>{req.donationDate}</td>
+
                   <td>
                     <span
-                      className={`badge capitalize w-22 px-2 py-4 text-sm font-semibold rounded-md
-                                  ${request.donationStatus === "pending" && "badge-warning"}
-                                  ${request.donationStatus === "inprogress" && "badge-info"}
-                                  ${request.donationStatus === "done" && "badge-success"}
-                                  ${request.donationStatus === "canceled" && "badge-error"}
-                                `}
+                      className={`badge capitalize px-3 min-w-25 py-2
+                        ${req.donationStatus === "pending" && "badge-warning"}
+                        ${req.donationStatus === "inprogress" && "badge-info"}
+                        ${req.donationStatus === "done" && "badge-success"}
+                        ${req.donationStatus === "canceled" && "badge-error"}
+                      `}
                     >
-                      {request.donationStatus}
+                      {req.donationStatus}
                     </span>
                   </td>
+
+                  {role === "admin" && (
+                    <td>
+                      <select
+                        className="select select-bordered select-sm"
+                        value={req.donationStatus}
+                        onChange={(e) =>
+                          handleStatusUpdate(req._id, e.target.value)
+                        }
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="inprogress">In Progress</option>
+                        <option value="done">Done</option>
+                        <option value="canceled">Canceled</option>
+                      </select>
+                    </td>
+                  )}
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
 
+      {/* Pagination */}
       {numberOfPages > 1 && (
         <div className="flex justify-center mt-8 gap-2">
-          <button onClick={handlePrev} className="btn btn-sm">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            className="btn btn-sm"
+          >
             Prev
           </button>
 
@@ -137,7 +189,12 @@ const MyRequest = () => {
             </button>
           ))}
 
-          <button onClick={handleNext} className="btn btn-sm">
+          <button
+            onClick={() =>
+              setCurrentPage((p) => Math.min(p + 1, pages.length))
+            }
+            className="btn btn-sm"
+          >
             Next
           </button>
         </div>

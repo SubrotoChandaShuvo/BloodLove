@@ -10,14 +10,6 @@ const AllRequest = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-  //   axiosInstance
-  //     .get(`/request?page=${currentPage - 1}&size=${itemsPerPage}`)
-  //     .then((res) => {
-  //       setAllRequest(res.data.requests);
-  //       setTotalRequests(res.data.totalRequests);
-  //     })
-  //     .catch((err) => console.log(err));
-  
   axiosInstance.get("/request", {
     params: {
       page: currentPage - 1,
@@ -68,8 +60,7 @@ const AllRequest = () => {
             <div className="p-4 space-y-2">
               <p><span className="font-semibold">Recipient:</span> {req.recipientName}</p>
               <p><span className="font-semibold">Hospital:</span> {req.hospitalName}</p>
-              {/* <p><span className="font-semibold">Address:</span> {req.fullAddress}</p>
-              <p><span className="font-semibold">District:</span> {req.recipientDistrict}, {req.recipientUpazila}</p> */}
+
               <p><span className="font-semibold">Date:</span> {req.donationDate}</p>
               <p><span className="font-semibold">Time:</span> {req.donationTime}</p>
 
@@ -78,7 +69,7 @@ const AllRequest = () => {
               </div>
             </div>
             <div className="px-4 pb-4">
-              <Link to={`/details/${req.requesterEmail}`}>
+              <Link to={`/details/${req._id}`}>
               <button className="w-full bg-green-600 text-white py-2 rounded-lg transition-all duration-300 hover:bg-red-600 hover:scale-105">
                 View
               </button>
@@ -89,7 +80,6 @@ const AllRequest = () => {
         ))}
       </div>
 
-      {/* Pagination */}
       <div className="flex justify-center mt-12 gap-4">
         <button onClick={handlePrev} disabled={currentPage === 1} className="btn">
           Prev

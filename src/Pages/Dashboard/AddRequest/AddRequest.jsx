@@ -5,7 +5,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 
 const AddRequest = () => {
-  const { user } = useContext(AuthContext);
+  const { user, role } = useContext(AuthContext);
 
   const [upazilas, setUpazilas] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -59,6 +59,7 @@ const AddRequest = () => {
             text: "Your request has been submitted successfully.",
             confirmButtonText: "OK",
           });
+          form.reset();
         }
       })
       .catch((err) => {
@@ -97,7 +98,7 @@ const AddRequest = () => {
           <label className="label">Requester Email</label>
           <input
             type="email"
-            readOnly
+            readOnly={role !== "admin"}
             value={user?.email || ""}
             className="input input-bordered w-full bg-gray-100"
           />

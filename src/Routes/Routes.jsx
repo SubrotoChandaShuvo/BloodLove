@@ -18,6 +18,7 @@ import Error from "../Pages/Error/Error";
 import AllRequest from "../Pages/AllRequest/AllRequest";
 import Profile from "../Pages/Dashboard/Profile/Profile";
 import Details from "../Pages/Details/Details";
+import EditRequest from "../Pages/Dashboard/Edit/EditRequest";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "/details/:email",
+        path: "/details/:id",
         element: <PrivateRoute><Details></Details></PrivateRoute>,
       },
       {
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
       {
         path: "my-request",
         element: <MyRequest />,
+      },
+      {
+        path: "edit-request/:id",
+        element: <EditRequest/>
       },
       {
         path: "profile",

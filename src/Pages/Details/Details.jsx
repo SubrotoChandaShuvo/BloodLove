@@ -1,53 +1,89 @@
 import { useParams } from "react-router";
-import { useEffect, useState } from "react";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import Swal from "sweetalert2";
+import useAxios from "../../hooks/useAxios";
 
 const Details = () => {
-  const { email } = useParams();
-  const axiosSecure = useAxiosSecure();
+  const { id } = useParams();
+  const axiosInstance = useAxios();
   const { user } = useContext(AuthContext);
-  const [request, setRequest] = useState(null);
+  const [request, setRequest] = useState({});
+
+  //   console.log(request);
 
   const fetchRequest = () => {
-    axiosSecure
-      .get(`/user/details/${email}`)
+    axiosInstance
+      .get(`/details/${id}`)
       .then((res) => setRequest(res.data))
       .catch((err) => console.log(err));
+
+    console.log("hello");
   };
 
   useEffect(() => {
     fetchRequest();
-  }, [axiosSecure, email]);
+  }, [axiosInstance, id]);
 
-  const handleDonate = (e) => {
-    e.preventDefault();
-    axiosSecure
-      .patch(`/update/donation/status?email=${email}&status=inprogress`)
-      .then(() => {
-        Swal.fire({
-          title: "Donation confirmed!",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        fetchRequest();
-        document.getElementById("donate_modal")?.close();
-      })
-      .catch(() => {
-        Swal.fire({
-          title: "Error!",
-          text: "Could not update donation status",
-          icon: "error",
-        });
+  // Handle donation confirmation
+//   const handleDonate = (e) => {
+//     e.preventDefault();
+
+//     axiosInstance
+//       .patch(`/update/donation/status?id=${id}&status=inprogress`)
+//       .then(() => {
+//         document.getElementById("donate_modal").close();
+//         Swal.fire({
+//           title: "Donation confirmed!",
+//           icon: "success",
+//           confirmButtonText: "OK",
+//         });
+//         fetchRequest();
+//         document.getElementById("donate_modal")?.close();
+//       })
+//       .catch(() => {
+//         document.getElementById("donate_modal").close();
+//         Swal.fire({
+//           title: "Error!",
+//           text: "Could not update donation status",
+//           icon: "error",
+//         });
+//       });
+//   };
+const handleDonate = (e) => {
+  e.preventDefault();
+
+  axiosInstance
+    .patch(`/update/donation/status`, {
+      id,
+      status: "inprogress",
+      donorName: user?.displayName,
+      donorEmail: user?.email,
+    })
+    .then(() => {
+      document.getElementById("donate_modal").close();
+      Swal.fire({
+        title: "Donation confirmed!",
+        icon: "success",
+        confirmButtonText: "OK",
       });
-  };
+      fetchRequest();
+    })
+    .catch(() => {
+      document.getElementById("donate_modal").close();
+      Swal.fire({
+        title: "Error!",
+        text: "Could not update donation status",
+        icon: "error",
+      });
+    });
+};
+
 
   if (!request) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <span className="loading loading-spinner loading-lg"></span>
+        <span className="loading loading-infinity w-24 h-24"></span>
       </div>
     );
   }
@@ -55,7 +91,7 @@ const Details = () => {
   return (
     <div className="flex justify-center my-10 px-4">
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-5">
+        <div className="bg-linear-to-r from-red-500 to-pink-500 text-white px-6 py-5">
           <h2 className="text-2xl font-bold">{request.requesterName}</h2>
           <p className="text-sm opacity-90">{request.requesterEmail}</p>
         </div>
@@ -116,11 +152,12 @@ const Details = () => {
               <span className="font-semibold text-gray-600">Status</span>
               <span
                 className={`px-4 py-1 rounded-full text-white font-medium capitalize
-          ${request.donationStatus === "pending" ? "bg-yellow-500" : ""}
-          ${request.donationStatus === "inprogress" ? "bg-blue-500" : ""}
-          ${request.donationStatus === "done" ? "bg-green-500" : ""}
-          ${request.donationStatus === "canceled" ? "bg-red-500" : ""}
-        `}
+                  ${request.donationStatus === "pending" ? "bg-yellow-500" : ""}
+                  ${
+                    request.donationStatus === "inprogress" ? "bg-blue-500" : ""
+                  }
+                  ${request.donationStatus === "done" ? "bg-green-500" : ""}
+                  ${request.donationStatus === "canceled" ? "bg-red-500" : ""}`}
               >
                 {request.donationStatus}
               </span>
@@ -135,6 +172,7 @@ const Details = () => {
           </div>
         </div>
 
+        {/* Actions */}
         <div className="px-6 py-4 border-t border-gray-200 flex justify-between">
           <button
             onClick={() => window.history.back()}
@@ -148,7 +186,7 @@ const Details = () => {
               onClick={() =>
                 document.getElementById("donate_modal").showModal()
               }
-              className="btn btn-primary btn-sm hover:bg-red-700"
+              className="btn bg-red-500 text-white btn-sm hover:bg-red-800"
             >
               Donate
             </button>
@@ -156,8 +194,9 @@ const Details = () => {
         </div>
       </div>
 
+      {/* Donate Modal */}
       <dialog id="donate_modal" className="modal">
-        <form method="dialog" className="modal-box p-6">
+        <form onSubmit={handleDonate} method="dialog" className="modal-box p-6">
           <h3 className="text-lg font-bold mb-4">Confirm Donation</h3>
           <div className="space-y-3">
             <div>
@@ -165,7 +204,7 @@ const Details = () => {
               <input
                 type="text"
                 readOnly
-                value={user?.displayName}
+                value={user?.displayName || ""}
                 className="input input-bordered w-full"
               />
             </div>
@@ -174,7 +213,7 @@ const Details = () => {
               <input
                 type="email"
                 readOnly
-                value={user?.email}
+                value={user?.email || ""}
                 className="input input-bordered w-full"
               />
             </div>
@@ -182,12 +221,12 @@ const Details = () => {
           <div className="modal-action">
             <button
               type="button"
-              className="btn btn-ghost"
+              className="btn btn-neutral"
               onClick={() => document.getElementById("donate_modal").close()}
             >
               Cancel
             </button>
-            <button className="btn btn-primary" onClick={handleDonate}>
+            <button className="btn btn-primary" type="submit">
               Confirm
             </button>
           </div>
