@@ -2,7 +2,7 @@
 
 **BloodLove** is a modern web application designed to **help people in need** by connecting blood donors and providing a platform for monetary support to charitable causes. It’s a community-driven platform that saves lives and empowers people to contribute in meaningful ways.
 
-🔗 **Live Demo:** [https://candid-douhua-d628ca.netlify.app/](https://candid-douhua-d628ca.netlify.app/)
+🔗 **Live Demo:** [https://candid-douhua-d628ca.netlify.app/](https://BloodLove/)
 
 ---
 
