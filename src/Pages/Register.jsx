@@ -125,7 +125,7 @@ const Register = () => {
               });
               // store users info in our DB
               axios
-                .post("http://localhost:5001/users", formData)
+                .post("https://bloodlove.vercel.app/users", formData)
                 .then((res) => {
                   console.log(res.data);
                 })

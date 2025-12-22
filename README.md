@@ -1,16 +1,48 @@
-# React + Vite
+# BloodLove ❤️🩸
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**BloodLove** is a modern web application designed to **help people in need** by connecting blood donors and providing a platform for monetary support to charitable causes. It’s a community-driven platform that saves lives and empowers people to contribute in meaningful ways.
 
-Currently, two official plugins are available:
+🔗 **Live Demo:** [https://candid-douhua-d628ca.netlify.app/](https://candid-douhua-d628ca.netlify.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 📌 About
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+BloodLove allows users to:
 
-## Expanding the ESLint configuration
+- Request blood and find available donors quickly  
+- Donate a small amount of money to support organizations and individuals in need  
+- Track donations and requests through an intuitive dashboard  
+- Access a responsive and user-friendly interface  
+- Receive real-time alerts and notifications via **SweetAlert**  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This project is perfect for anyone passionate about helping others through **blood donation** or **financial support**.
+
+---
+
+## 🚀 Features
+
+✔ Connect with blood donors instantly  
+✔ Donate money to support organizations or individuals  
+✔ Responsive and mobile-friendly design  
+✔ Admin dashboard to manage requests and donations  
+✔ Real-time alerts and notifications using **SweetAlert**  
+✔ User authentication and management with **Firebase**  
+✔ Data storage and management with **MongoDB**  
+
+---
+
+## 🧱 Tech Stack
+
+- **React** — Frontend UI library  
+- **Vite** — Fast build tool  
+- **Firebase** — Authentication & hosting  
+- **MongoDB** — Database for storing requests and donations  
+- **SweetAlert** — Beautiful alert messages  
+- **JavaScript** — Programming language  
+- **HTML & CSS** — Markup and styling  
+
+---
+
+## 📁 Repository Structure
+
