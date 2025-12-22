@@ -42,17 +42,6 @@ This project is perfect for anyone passionate about helping others through **blo
 - **JavaScript** — Programming language  
 - **HTML & CSS** — Markup and styling  
 
----
-
-## 📁 Repository Structure
-📦 BloodLove
-├── src/ # Source code
-├── public/ # Static assets
-├── .gitignore
-├── index.html
-├── package.json
-├── vite.config.js
-└── README.md
 
 ## 🔧 Installation
 
