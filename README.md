@@ -87,7 +87,6 @@ Open a Pull Request ✨
 📜 License
 
 This project is open source. You are free to use, modify, and share it.
-(Add the license type if applicable, e.g., MIT)
 
 ❤️ Author
 
