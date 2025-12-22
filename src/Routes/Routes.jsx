@@ -17,6 +17,7 @@ import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 import Error from "../Pages/Error/Error";
 import AllRequest from "../Pages/AllRequest/AllRequest";
 import Profile from "../Pages/Dashboard/Profile/Profile";
+import Details from "../Pages/Details/Details";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: "/details/:email",
+        element: <PrivateRoute><Details></Details></PrivateRoute>,
       },
       {
         path: "/donate",
@@ -55,9 +60,7 @@ const router = createBrowserRouter([
       {
         path: "/search",
         element: (
-          <PrivateRoute>
             <SearchRequest />
-          </PrivateRoute>
         ),
       },
       {

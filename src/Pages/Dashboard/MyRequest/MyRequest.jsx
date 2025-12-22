@@ -103,7 +103,7 @@ const MyRequest = () => {
                   <td>{request.donationDate}</td>
                   <td>
                     <span
-                      className={`badge capitalize px-2 py-4 text-sm font-semibold rounded-md
+                      className={`badge capitalize w-22 px-2 py-4 text-sm font-semibold rounded-md
                                   ${request.donationStatus === "pending" && "badge-warning"}
                                   ${request.donationStatus === "inprogress" && "badge-info"}
                                   ${request.donationStatus === "done" && "badge-success"}

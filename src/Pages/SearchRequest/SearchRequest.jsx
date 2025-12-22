@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios";
+import Swal from "sweetalert2";
 
 const SearchRequest = () => {
   const [upazilas, setUpazilas] = useState([]);
@@ -19,12 +20,20 @@ const SearchRequest = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     const bloodGroup = e.target.blood.value;
-    axiosInstance
-      .get(
-        `/search-requests?bloodGroup=${bloodGroup}&district=${district}&upazila=${upazila}`
-      )
-      .then((res) => setLists(res.data))
-      .catch((err) => console.log(err));
+    if (upazila || district || bloodGroup) {
+      axiosInstance
+        .get(
+          `/search-requests?bloodGroup=${bloodGroup}&district=${district}&upazila=${upazila}`
+        )
+        .then((res) => setLists(res.data))
+        .catch((err) => console.log(err));
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Oops!",
+        text: "Please search by selecting any category",
+      });
+    }
   };
 
   const handleReset = () => {
@@ -37,9 +46,14 @@ const SearchRequest = () => {
 
   return (
     <div>
-      <form className="fieldset lg:flex justify-center mx-4 lg:mx-18 mt-8" onSubmit={handleSearch}>
+      <form
+        className="fieldset lg:flex justify-center mx-4 lg:mx-18 mt-8"
+        onSubmit={handleSearch}
+      >
         <select name="blood" defaultValue="" className="select w-full">
-          <option value="" disabled>Select Blood Group</option>
+          <option value="" disabled>
+            Select Blood Group
+          </option>
           <option value="A+">A+</option>
           <option value="A-">A-</option>
           <option value="B+">B+</option>
@@ -50,22 +64,42 @@ const SearchRequest = () => {
           <option value="O-">O-</option>
         </select>
 
-        <select value={district} onChange={(e) => setDistrict(e.target.value)} className="select w-full">
-          <option value="" disabled>Select Your District</option>
+        <select
+          value={district}
+          onChange={(e) => setDistrict(e.target.value)}
+          className="select w-full"
+        >
+          <option value="" disabled>
+            Select Your District
+          </option>
           {districts.map((d, index) => (
-            <option key={index} value={d?.name}>{d?.name}</option>
+            <option key={index} value={d?.name}>
+              {d?.name}
+            </option>
           ))}
         </select>
 
-        <select value={upazila} onChange={(e) => setUpazila(e.target.value)} className="select w-full">
-          <option value="" disabled>Select Your Upazila</option>
+        <select
+          value={upazila}
+          onChange={(e) => setUpazila(e.target.value)}
+          className="select w-full"
+        >
+          <option value="" disabled>
+            Select Your Upazila
+          </option>
           {upazilas.map((u) => (
-            <option key={u?.id} value={u?.name}>{u?.name}</option>
+            <option key={u?.id} value={u?.name}>
+              {u?.name}
+            </option>
           ))}
         </select>
 
-        <button className="btn btn-primary" type="submit">Search</button>
-        <button className="btn btn-error" type="button" onClick={handleReset}>Reset</button>
+        <button className="btn btn-primary" type="submit">
+          Search
+        </button>
+        <button className="btn btn-error" type="button" onClick={handleReset}>
+          Reset
+        </button>
       </form>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 m-6">
@@ -84,14 +118,27 @@ const SearchRequest = () => {
                     className="h-24 w-24 rounded-full object-cover shadow-md"
                   />
                 </div>
-                <h2 className="card-title text-red-500 text-center">{item.name}</h2>
+                <h2 className="card-title text-red-500 text-center">
+                  {item.name}
+                </h2>
                 <p className="text-xl font-bold">Blood Group: {item.blood}</p>
-                <p><span className="font-semibold">Role:</span> {item.role}</p>
-                <p><span className="font-semibold">District:</span> {item.district}</p>
-                <p><span className="font-semibold">Upazila:</span> {item.upazila}</p>
-                <p><span className="font-semibold">Email:</span> {item.email}</p>
+                <p>
+                  <span className="font-semibold">Role:</span> {item.role}
+                </p>
+                <p>
+                  <span className="font-semibold">District:</span>{" "}
+                  {item.district}
+                </p>
+                <p>
+                  <span className="font-semibold">Upazila:</span> {item.upazila}
+                </p>
+                <p>
+                  <span className="font-semibold">Email:</span> {item.email}
+                </p>
                 <div className="card-actions justify-end mt-2">
-                  <button className="btn btn-sm btn-primary text-white">View Details</button>
+                  <button className="btn btn-sm btn-primary text-white">
+                    View Details
+                  </button>
                 </div>
               </div>
             </div>

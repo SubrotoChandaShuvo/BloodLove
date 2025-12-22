@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios";
+import { Link } from "react-router";
 
 const AllRequest = () => {
   const axiosInstance = useAxios();
@@ -9,14 +10,28 @@ const AllRequest = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    axiosInstance
-      .get(`/request?page=${currentPage - 1}&size=${itemsPerPage}`)
-      .then((res) => {
-        setAllRequest(res.data.requests);
-        setTotalRequests(res.data.totalRequests);
-      })
-      .catch((err) => console.log(err));
-  }, [axiosInstance, currentPage, itemsPerPage]);
+  //   axiosInstance
+  //     .get(`/request?page=${currentPage - 1}&size=${itemsPerPage}`)
+  //     .then((res) => {
+  //       setAllRequest(res.data.requests);
+  //       setTotalRequests(res.data.totalRequests);
+  //     })
+  //     .catch((err) => console.log(err));
+  
+  axiosInstance.get("/request", {
+    params: {
+      page: currentPage - 1,
+      size: itemsPerPage,
+      status: "pending",
+    },
+  })
+  .then(res => {
+    setAllRequest(res.data.requests);
+    setTotalRequests(res.data.totalRequests);
+  })
+  .catch(err => console.log(err));
+}, [axiosInstance, currentPage, itemsPerPage]);
+
 
   const numberOfPages = Math.ceil(totalRequests / itemsPerPage);
   const pages = [...Array(numberOfPages).keys()].map((e) => e + 1);
@@ -37,6 +52,7 @@ const AllRequest = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10 px-6">
         {allRequest.map((req) => (
+          req.donationStatus === 'pending' && (
           <div
             key={req._id}
             className="group bg-white rounded-xl border border-red-100 shadow-md 
@@ -52,8 +68,8 @@ const AllRequest = () => {
             <div className="p-4 space-y-2">
               <p><span className="font-semibold">Recipient:</span> {req.recipientName}</p>
               <p><span className="font-semibold">Hospital:</span> {req.hospitalName}</p>
-              <p><span className="font-semibold">Address:</span> {req.fullAddress}</p>
-              <p><span className="font-semibold">District:</span> {req.recipientDistrict}, {req.recipientUpazila}</p>
+              {/* <p><span className="font-semibold">Address:</span> {req.fullAddress}</p>
+              <p><span className="font-semibold">District:</span> {req.recipientDistrict}, {req.recipientUpazila}</p> */}
               <p><span className="font-semibold">Date:</span> {req.donationDate}</p>
               <p><span className="font-semibold">Time:</span> {req.donationTime}</p>
 
@@ -61,13 +77,15 @@ const AllRequest = () => {
                 {req.requestMessage}
               </div>
             </div>
-
             <div className="px-4 pb-4">
+              <Link to={`/details/${req.requesterEmail}`}>
               <button className="w-full bg-green-600 text-white py-2 rounded-lg transition-all duration-300 hover:bg-red-600 hover:scale-105">
-                Donate Now
+                View
               </button>
+              </Link>
             </div>
           </div>
+          )
         ))}
       </div>
 

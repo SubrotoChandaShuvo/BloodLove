@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
-import axios from "axios"; 
+import axios from "axios";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const AddRequest = () => {
   const { user } = useContext(AuthContext);
@@ -11,7 +12,7 @@ const AddRequest = () => {
   const [district, setDistrict] = useState("");
   const [upazila, setUpazila] = useState("");
 
-  const axiosSecure = useAxiosSecure()
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     axios.get("/upazila.json").then((res) => {
@@ -48,11 +49,26 @@ const AddRequest = () => {
 
     console.log(formData);
 
-    axiosSecure.post("/request", formData)
+    axiosSecure
+      .post("/request", formData)
       .then((res) => {
-        alert(res.data.insertedId);
+        if (res.data.insertedId) {
+          Swal.fire({
+            icon: "success",
+            title: "Request Sent!",
+            text: "Your request has been submitted successfully.",
+            confirmButtonText: "OK",
+          });
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops!",
+          text: "Something went wrong. Please try again.",
+        });
+      });
   };
 
   return (

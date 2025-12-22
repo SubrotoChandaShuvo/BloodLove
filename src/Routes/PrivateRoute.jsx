@@ -10,7 +10,7 @@ const PrivateRoute = ({ children }) => {
   // console.log(loading);
   // console.log(roleLoading);
 
-  // 1️⃣ Wait for Firebase auth to resolve
+  // Wait for Firebase auth to resolve
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -19,12 +19,12 @@ const PrivateRoute = ({ children }) => {
     );
   }
 
-  // 2️⃣ After auth resolved — user not logged in
+  // After auth resolved — user not logged in
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // 3️⃣ User exists — wait for role
+  // User exists — wait for role
   if (roleLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">

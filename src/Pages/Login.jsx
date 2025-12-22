@@ -15,9 +15,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [showPass, setShowPass] = useState(false);
 
-  if (user) {
-    return <Navigate to="/" replace />;
-  }
+  // if (user) {
+  //   return <Navigate to="/" replace />;
+  // }
 
   const handleSubmit = (e) => {
     e.preventDefault();
