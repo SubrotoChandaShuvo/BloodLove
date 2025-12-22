@@ -5,7 +5,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { AuthContext } from "../../../Provider/AuthProvider";
 
 const EditRequest = () => {
-  const { id } = useParams(); // Get request ID from URL
+  const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -25,11 +25,13 @@ const EditRequest = () => {
     donationStatus: "pending",
   });
 
+  const [loading, setLoading] = useState(false);
+
   // Fetch existing request details
   useEffect(() => {
-    axiosSecure
-      .get(`/details/${id}`)
-      .then((res) => {
+    const fetchRequest = async () => {
+      try {
+        const res = await axiosSecure.get(`/details/${id}`);
         setRequestData({
           recipientName: res.data.recipientName || "",
           recipientDistrict: res.data.recipientDistrict || "",
@@ -44,20 +46,24 @@ const EditRequest = () => {
           donorEmail: res.data.donorEmail || "",
           donationStatus: res.data.donationStatus || "pending",
         });
-      })
-      .catch((err) => console.log(err));
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "Failed to fetch request details.", "error");
+      }
+    };
+    fetchRequest();
   }, [axiosSecure, id]);
 
   // Handle form input changes
   const handleChange = (e) => {
-    e.preventDefault();
     const { name, value } = e.target;
     setRequestData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submission to update the donation request
-  const handleUpdate = (e) => {
+  // Handle form submission
+  const handleUpdate = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const updateData = { ...requestData };
     if (requestData.donationStatus === "inprogress") {
@@ -65,23 +71,16 @@ const EditRequest = () => {
       updateData.donorEmail = user?.email || "";
     }
 
-    axiosSecure
-      .patch(`/update/request/${id}`, updateData)
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Updated!",
-          text: "Donation request has been updated successfully.",
-        });
-        navigate("/dashboard"); // redirect back to dashboard
-      })
-      .catch(() =>
-        Swal.fire({
-          icon: "error",
-          title: "Error!",
-          text: "Failed to update donation request.",
-        })
-      );
+    try {
+      await axiosSecure.patch(`/update/request/${id}`, updateData);
+      Swal.fire("Updated!", "Donation request has been updated successfully.", "success");
+      navigate("/dashboard/main");
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error!", "Failed to update donation request.", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,6 +88,7 @@ const EditRequest = () => {
       <h2 className="text-2xl font-bold mb-6">Edit Donation Request</h2>
 
       <form onSubmit={handleUpdate} className="space-y-4">
+        {/* Recipient Name */}
         <div>
           <label className="label">Recipient Name</label>
           <input
@@ -101,6 +101,7 @@ const EditRequest = () => {
           />
         </div>
 
+        {/* Hospital */}
         <div>
           <label className="label">Hospital</label>
           <input
@@ -113,6 +114,7 @@ const EditRequest = () => {
           />
         </div>
 
+        {/* District & Upazila */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="label">District</label>
@@ -138,6 +140,7 @@ const EditRequest = () => {
           </div>
         </div>
 
+        {/* Full Address */}
         <div>
           <label className="label">Full Address</label>
           <textarea
@@ -149,6 +152,7 @@ const EditRequest = () => {
           />
         </div>
 
+        {/* Blood Group */}
         <div>
           <label className="label">Blood Group</label>
           <select
@@ -170,6 +174,7 @@ const EditRequest = () => {
           </select>
         </div>
 
+        {/* Donation Date & Time */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="label">Donation Date</label>
@@ -195,6 +200,7 @@ const EditRequest = () => {
           </div>
         </div>
 
+        {/* Optional Message */}
         <div>
           <label className="label">Message (Optional)</label>
           <textarea
@@ -205,6 +211,7 @@ const EditRequest = () => {
           />
         </div>
 
+        {/* Donation Status */}
         <div>
           <label className="label">Donation Status</label>
           <select
@@ -221,8 +228,8 @@ const EditRequest = () => {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-primary w-full">
-          Update Donation Request
+        <button type="submit" className="btn btn-primary w-full" disabled={loading}>
+          {loading ? "Updating..." : "Update Donation Request"}
         </button>
       </form>
     </div>
