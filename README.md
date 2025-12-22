@@ -2,7 +2,7 @@
 
 **BloodLove** is a modern web application designed to **help people in need** by connecting blood donors and providing a platform for monetary support to charitable causes. It’s a community-driven platform that saves lives and empowers people to contribute in meaningful ways.
 
-🔗 **Live Demo:** [https://candid-douhua-d628ca.netlify.app/](https://BloodLove/)
+🔗 **Live Demo:** [https://candid-douhua-d628ca.netlify.app/](https://candid-douhua-d628ca.netlify.app/)
 
 ---
 
@@ -45,4 +45,62 @@ This project is perfect for anyone passionate about helping others through **blo
 ---
 
 ## 📁 Repository Structure
+📦 BloodLove
+├── src/ # Source code
+├── public/ # Static assets
+├── .gitignore
+├── index.html
+├── package.json
+├── vite.config.js
+└── README.md
 
+## 🔧 Installation
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/SubrotoChandaShuvo/BloodLove.git
+Install dependencies
+
+cd BloodLove
+npm install
+
+
+Run the app locally
+
+npm run dev
+
+
+Open http://localhost:5173
+ (or the port shown in your terminal)
+
+📦 Build
+
+To create a production build:
+
+npm run build
+
+
+Deploy the dist/ folder to platforms like Netlify, Vercel, or GitHub Pages.
+
+📝 Contributing
+
+Contributions are welcome! Whether you want to add features, improve the UI, or fix bugs:
+
+Fork the repository
+
+Create a new branch (git checkout -b feature-name)
+
+Commit your changes
+
+Open a Pull Request ✨
+
+📜 License
+
+This project is open source. You are free to use, modify, and share it.
+(Add the license type if applicable, e.g., MIT)
+
+❤️ Author
+
+Subroto Chanda Shuvo — Creator of BloodLove
+Your contributions or support can help save lives. Don’t forget to ⭐ the repository if you find it useful!
