@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../Provider/AuthProvider";
 import { signOut } from "firebase/auth";
 import auth from "../firebase/firebase.config";
@@ -8,31 +8,31 @@ import Swal from "sweetalert2";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-const logout = () => {
-  signOut(auth)
-    .then(() => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Logged out!',
-        text: 'You have been successfully logged out.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Logged out!",
+          text: "You have been successfully logged out.",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK",
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `Something went wrong: ${error.message}`,
+        });
       });
-    })
-    .catch((error) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: `Something went wrong: ${error.message}`,
-      });
-    });
-};
+  };
 
   return (
     <div>
       <div className="navbar bg-base-100 shadow-sm">
-
         {/* LEFT */}
         <div className="navbar-start">
           <div className="dropdown">
@@ -43,22 +43,34 @@ const logout = () => {
             {/* MOBILE MENU */}
             <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
               <li>
-                <NavLink to="/" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                <NavLink
+                  to="/"
+                  className={({ isActive }) => (isActive ? "text-red-500" : "")}
+                >
                   Home
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/all-request" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                <NavLink
+                  to="/all-request"
+                  className={({ isActive }) => (isActive ? "text-red-500" : "")}
+                >
                   All Request
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/search" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                <NavLink
+                  to="/search"
+                  className={({ isActive }) => (isActive ? "text-red-500" : "")}
+                >
                   Search
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/donate" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+                <NavLink
+                  to="/donate"
+                  className={({ isActive }) => (isActive ? "text-red-500" : "")}
+                >
                   Donate
                 </NavLink>
               </li>
@@ -74,22 +86,34 @@ const logout = () => {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <NavLink to="/" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+              <NavLink
+                to="/"
+                className={({ isActive }) => (isActive ? "text-red-500" : "")}
+              >
                 Home
               </NavLink>
             </li>
             <li>
-              <NavLink to="/all-request" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+              <NavLink
+                to="/all-request"
+                className={({ isActive }) => (isActive ? "text-red-500" : "")}
+              >
                 All Request
               </NavLink>
             </li>
             <li>
-              <NavLink to="/search" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+              <NavLink
+                to="/search"
+                className={({ isActive }) => (isActive ? "text-red-500" : "")}
+              >
                 Search
               </NavLink>
             </li>
             <li>
-              <NavLink to="/donate" className={({ isActive }) => isActive ? "text-red-500" : ""}>
+              <NavLink
+                to={user ? "/donate" : "/login"}
+                className={({ isActive }) => (isActive ? "text-red-500" : "")}
+              >
                 Donate
               </NavLink>
             </li>
@@ -118,7 +142,6 @@ const logout = () => {
             </Link>
           )}
         </div>
-
       </div>
     </div>
   );

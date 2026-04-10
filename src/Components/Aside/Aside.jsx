@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import {
   Home,
   Users,
@@ -17,8 +17,9 @@ import Swal from "sweetalert2";
 
 const Aside = () => {
   const { role } = useContext(AuthContext);
+  const navigate=useNavigate();
 
-  const logout = () => {
+const logout = () => {
   Swal.fire({
     title: "Do you want to Logout?",
     icon: "warning",
@@ -26,10 +27,17 @@ const Aside = () => {
     confirmButtonText: "Yes",
   }).then((result) => {
     if (result.isConfirmed) {
-      signOut(auth);
+      signOut(auth)
+        .then(() => {
+          navigate("/");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   });
 };
+
 
   return (
     <aside className="fixed left-0 top-0 w-64 h-screen bg-slate-900 text-white flex flex-col">

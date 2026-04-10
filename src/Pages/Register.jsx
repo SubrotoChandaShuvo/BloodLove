@@ -14,7 +14,8 @@ const Register = () => {
     setUser,
     loading,
     setLoading,
-    // handleGoogleSignin,
+    setIsFatching,
+    handleGoogleSignin,
   } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -128,6 +129,7 @@ const Register = () => {
                 .post("https://bloodlove.vercel.app/users", formData)
                 .then((res) => {
                   console.log(res.data);
+                  setIsFatching(true);
                 })
                 .catch((err) => {
                   console.log(err);
@@ -150,28 +152,47 @@ const Register = () => {
     }
   };
 
-  // const googleSignup = () => {
-  //   handleGoogleSignin()
-  //     .then((result) => {
-  //       const user = result.user;
-  //       setUser(user);
-  //       Swal.fire({
-  //         title: "Registration Successful! 🎉",
-  //         icon: "success",
-  //         draggable: true,
-  //       });
-  //       // toast.success("Signup Successful! 🎉");
-  //       navigate("/");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //        Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: "Signup Process failed❗ Please try again.",
-  //     });
-  //     });
-  // };
+  const googleSignup = () => {
+    handleGoogleSignin()
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+        
+        // Prepare info for MongoDB
+        const formData = {
+          email: user.email,
+          name: user.displayName,
+          mainPhotoUrl: user.photoURL,
+          blood: "Unknown", // Google doesn't provide blood type
+          district: "Unknown",
+          upazila: "Unknown",
+        };
+
+        // Store user in our DB so they get 'active' status
+        axios.post("https://bloodlove.vercel.app/users", formData)
+          .then(() => {
+            setIsFatching(true);
+            Swal.fire({
+              title: "Registration Successful! 🎉",
+              icon: "success",
+              draggable: true,
+            });
+            navigate("/");
+          })
+          .catch((err) => {
+             console.log(err);
+             navigate("/"); // still navigate if user already exists
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Signup Process failed❗ Please try again.",
+        });
+      });
+  };
 
   return (
     <div>
@@ -314,13 +335,13 @@ const Register = () => {
               >
                 Register
               </button>
-              {/* <p className="text-center">Or Register with Google</p>
+              <p className="text-center">Or Register with Google</p>
               <button
                 onClick={googleSignup}
                 className="btn bg-gray-300 transform transition-transform duration-300 hover:scale-102"
               >
                 <FcGoogle className="text-2xl" /> Google
-              </button> */}
+              </button>
             </form>
           </div>
         </div>

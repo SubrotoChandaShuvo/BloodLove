@@ -73,30 +73,28 @@ const router = createBrowserRouter([
   {
     path: "dashboard",
     element: (
-      <PrivateRoute>
         <DashboardLayout></DashboardLayout>
-      </PrivateRoute>
     ),
     children: [
       {
         path: "main",
-        element: <MainDashboard />,
+        element: <PrivateRoute><MainDashboard /></PrivateRoute>
       },
       {
         path: "add-request",
-        element: <AddRequest />,
+        element: <PrivateRoute><AddRequest /></PrivateRoute>
       },
       {
         path: "all-users",
-        element: <AllUsers />,
+        element: <PrivateRoute><AllUsers /></PrivateRoute>,
       },
       {
         path: "my-request",
-        element: <MyRequest />,
+        element: <PrivateRoute><MyRequest />,</PrivateRoute>
       },
       {
         path: "edit-request/:id",
-        element: <EditRequest/>
+        element: <PrivateRoute><EditRequest/></PrivateRoute>
       },
       {
         path: "profile",

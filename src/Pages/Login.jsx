@@ -6,9 +6,10 @@ import { AuthContext } from "../Provider/AuthProvider";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const Login = () => {
-  const { user, setUser, setLoading } = useContext(AuthContext);
+  const { user, setUser, setLoading, handleGoogleSignin, setIsFatching } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -47,6 +48,51 @@ const Login = () => {
   const handleForget = () => {
     navigate(`/forget/${email}`);
   };
+
+
+  const googleSignup = () => {
+      handleGoogleSignin()
+        .then((result) => {
+          const user = result.user;
+          setUser(user);
+          
+          // Prepare info for MongoDB
+          const formData = {
+            email: user.email,
+            name: user.displayName,
+            mainPhotoUrl: user.photoURL,
+            blood: "Unknown",
+            district: "Unknown",
+            upazila: "Unknown",
+          };
+
+          // Store user in our DB so they get 'active' status
+          axios.post("https://bloodlove.vercel.app/users", formData)
+            .then(() => {
+              if (setIsFatching) setIsFatching(true);
+              Swal.fire({
+                title: "Login Successful! 🎉",
+                icon: "success",
+                draggable: true,
+              });
+              const from = location.state?.from?.pathname || "/";
+              navigate(from, { replace: true });
+            })
+            .catch((err) => {
+               console.log(err);
+               const from = location.state?.from?.pathname || "/";
+               navigate(from, { replace: true });
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Signup Process failed❗ Please try again.",
+          });
+        });
+    };
 
   return (
     <div>
@@ -95,6 +141,15 @@ const Login = () => {
               </div>
               <button className="btn btn-primary transform transition-transform duration-300 hover:scale-102">
                 Login
+              </button>
+
+              {/* For Google Login */}
+              <p className="text-center">Or Register with Google</p>
+              <button
+                onClick={googleSignup}
+                className="btn bg-gray-300 transform transition-transform duration-300 hover:scale-102"
+              >
+                <FcGoogle className="text-2xl" /> Google
               </button>
             </form>
           </div>

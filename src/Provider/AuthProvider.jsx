@@ -19,6 +19,7 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState("");
   const [userStatus, setUserStatus] = useState(null);
+  const [isFatching, setIsFatching] = useState(false);
 
   const registerWithEmailPassword = (email, pass) => {
     // console.log(email, pass);
@@ -84,7 +85,7 @@ const AuthProvider = ({ children }) => {
 
     // Cleanup to prevent cascading renders
     return () => controller.abort();
-  }, [user]);
+  }, [user, isFatching]);
 
   // console.log(role);
 
@@ -98,6 +99,7 @@ const AuthProvider = ({ children }) => {
     role,
     roleLoading,
     userStatus,
+    setIsFatching,
   };
 
   // return <AuthContext value={authData}>{children}</AuthContext>;

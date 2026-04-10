@@ -9,6 +9,7 @@ const Details = () => {
   const axiosInstance = useAxios();
   const { user } = useContext(AuthContext);
   const [request, setRequest] = useState({});
+  
 
   //   console.log(request);
 

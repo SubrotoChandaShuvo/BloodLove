@@ -7,7 +7,7 @@ import { FaMoneyBillWave, FaTint, FaUsers } from "react-icons/fa";
 import useAxios from "../../../hooks/useAxios";
 
 const MainDashboard = () => {
-  const { user } = useContext(AuthContext);
+  const { user, role } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
   const axiosInstance = useAxios();
   const navigate = useNavigate();
@@ -16,16 +16,23 @@ const MainDashboard = () => {
   const [countReq, setCountReq] = useState(null)
   const [totalFund, setTotalFund] = useState(null)
   const [countDonor, setCountDonor] = useState(null);
-  const [role, setRole] = useState("");
+  // const [role, setRole] = useState("");
 
-  useEffect(() => {
-    if (user?.email) {
-      axiosInstance
-        .get(`/users/role/${user.email}`)
-        .then((res) => setRole(res.data?.role || "user"))
-        .catch(console.error);
-    }
-  }, [user?.email]);
+  // useEffect(() => {
+  //   if (user?.email) {
+  //     axiosInstance
+  //       .get(`/users/role/${user.email}`)
+  //       .then((res) => {
+
+          
+  //         setRole(res.data?.role || "donor")
+  //       })
+  //       .catch(console.error);
+  //   }
+  // }, [user?.email]);
+
+  console.log(role);
+  
 
   useEffect(() => {
     if (user?.email) {
@@ -50,6 +57,8 @@ const MainDashboard = () => {
   }, [axiosInstance, axiosSecure, user]);
 
 //   console.log(recentRequests);
+console.log(role);
+
 
   const handleStatusUpdate = (id, newStatus) => {
     console.log(id);
