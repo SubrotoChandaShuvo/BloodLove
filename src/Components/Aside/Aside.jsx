@@ -85,7 +85,7 @@ const logout = () => {
           My Profile
         </NavLink>
 
-        <NavLink
+        {/* <NavLink
           to="add-request"
           onClick={closeSidebar}
           className={({ isActive }) =>
@@ -95,7 +95,7 @@ const logout = () => {
         >
           <CirclePlus size={22} />
           Add Request
-        </NavLink>
+        </NavLink> */}
 
         {role === "admin" || role === "volunteer" ? (
           <NavLink

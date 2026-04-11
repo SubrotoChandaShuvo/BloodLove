@@ -49,6 +49,13 @@ const Navbar = () => {
           All Request
         </NavLink>
       </li>
+      {user && (
+        <li className="mx-1">
+          <NavLink to="/add-request" className={navItemClass}>
+            Add Request
+          </NavLink>
+        </li>
+      )}
       <li className="mx-1">
         <NavLink to="/search" className={navItemClass}>
           Search

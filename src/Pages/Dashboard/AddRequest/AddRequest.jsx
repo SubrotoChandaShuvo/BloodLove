@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import axios from "axios";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
@@ -6,6 +7,7 @@ import Swal from "sweetalert2";
 
 const AddRequest = () => {
   const { user, role } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [upazilas, setUpazilas] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -58,6 +60,8 @@ const AddRequest = () => {
             title: "Request Sent!",
             text: "Your request has been submitted successfully.",
             confirmButtonText: "OK",
+          }).then(() => {
+            navigate("/all-request");
           });
           form.reset();
         }

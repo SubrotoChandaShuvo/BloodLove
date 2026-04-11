@@ -31,7 +31,7 @@ const MainDashboard = () => {
   //   }
   // }, [user?.email]);
 
-  console.log(role);
+  // console.log(role);
   
 
   useEffect(() => {
@@ -47,17 +47,22 @@ const MainDashboard = () => {
     axiosInstance
       .get("/requests/count")
       .then((res) => {
-        console.log("hhhh", res.data);
+        console.log("🔍 Backend response keys:", Object.keys(res.data));
+        console.log("🔍 Full response data:", res.data);
         setCountReq(res.data.totalRequests)
-        // setTotalFund(res.data.totalFund.totalAmount)
         setTotalFund(res.data.totalFund[0]?.totalAmount || 0);
         setCountDonor(res.data.totalDonor)
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error("❌ /requests/count API failed!");
+        console.error("Status:", err?.response?.status);
+        console.error("Message:", err?.response?.data || err?.message);
+        console.error("Full error:", err);
+      });
   }, [axiosInstance, axiosSecure, user]);
 
 //   console.log(recentRequests);
-console.log(role);
+// console.log(role);
 
 
   const handleStatusUpdate = (id, newStatus) => {

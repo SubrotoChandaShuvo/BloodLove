@@ -59,6 +59,10 @@ const router = createBrowserRouter([
         element: <AllRequest />,
       },
       {
+        path: "/add-request",
+        element: <PrivateRoute><AddRequest /></PrivateRoute>
+      },
+      {
         path: "/search",
         element: (
             <SearchRequest />
@@ -79,10 +83,6 @@ const router = createBrowserRouter([
       {
         path: "main",
         element: <PrivateRoute><MainDashboard /></PrivateRoute>
-      },
-      {
-        path: "add-request",
-        element: <PrivateRoute><AddRequest /></PrivateRoute>
       },
       {
         path: "all-users",
