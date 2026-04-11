@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
-import Swal from "sweetalert2";
-import axios from "axios";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
+const BLOOD_COLORS = {
+  "A+": "bg-red-500", "A-": "bg-rose-500",
+  "B+": "bg-orange-500", "B-": "bg-amber-500",
+  "AB+": "bg-purple-500", "AB-": "bg-violet-600",
+  "O+": "bg-green-500", "O-": "bg-teal-500",
+};
 
 const Profile = () => {
-  const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
-  const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState(null);
 
   useEffect(() => {
@@ -18,203 +20,102 @@ const Profile = () => {
     }
   }, [user]);
 
-  //   console.log(profileData.blood);
-
   if (!profileData) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <span className="loading loading-spinner loading-lg"></span>
+        <span className="loading loading-spinner loading-lg text-red-500"></span>
       </div>
     );
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const form = e.target;
-    const name = form.name.value;
-    const district = form.district.value;
-    const upazila = form.upazila.value;
-    const blood = form.blood.value;
-    const file = form.photoUrl.files[0];
-
-    let mainPhotoUrl = profileData.mainPhotoUrl;
-
-    if (file) {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const res = await axios.post(
-        "https://api.imgbb.com/1/upload?key=f597642f9c8f007109a3f030821c0edb",
-        formData
-      );
-
-      mainPhotoUrl = res.data.data.display_url;
-    }
-
-    const updatedProfile = {
-      name,
-      district,
-      upazila,
-      blood,
-      mainPhotoUrl,
-    };
-
-    // console.log(updatedProfile);
-    // return
-
-    axiosSecure
-      .patch(`/users/update/profile?email=${profileData.email}`, updatedProfile)
-      .then((res) => {
-        console.log(res.data);
-
-        Swal.fire({
-          icon: "success",
-          title: "Profile Updated",
-          text: "Your profile information has been saved",
-        });
-
-        setProfileData({ ...profileData, ...updatedProfile });
-        setIsEditing(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        Swal.fire({
-          icon: "error",
-          title: "Update Failed",
-          text: "Something went wrong while updating your profile",
-        });
-      });
-  };
+  const bloodColor = BLOOD_COLORS[profileData.blood] || "bg-red-500";
 
   return (
-    <div className="min-h-screen bg-red flex justify-center items-center">
-      <div className="w-full max-w-xl">
-        {!isEditing && (
-          //   <div className="bg-white rounded-xl shadow p-6 mb-6">
-          <div
-            className="relative rounded-2xl p-6 mb-6
-            bg-linear-to-br from-red-400/50 via-pink-400/50 to-purple-500/70
-            backdrop-blur-xl border border-white/30 shadow-xl
-            hover:shadow-2xl hover:-translate-y-1
-            transition-all duration-300"
-          >
-            <div className="flex items-center gap-6">
-              <img
-                src={
-                  profileData.mainPhotoUrl ||
-                  profileData.avatar ||
-                  user.photoURL
-                }
-                className="w-30 h-38 rounded-xl"
-              />
-              <div>
-                <h2 className="text-xl font-semibold">{profileData.name}</h2>
-                <p className="text-gray-600">{profileData.email}</p>
-                {/* <p className="text-sm text-gray-500 capitalize">
-                  Role: {profileData.role}
-                </p> */}
-                <p className="text-sm">
-                  {profileData.district}, {profileData.upazila}
-                </p>
-                <p className="text-sm font-bold">
-                  Blood Group: {profileData.blood}
-                </p>
-              </div>
+    <div className="min-h-screen p-4 md:p-8">
+      {/* Page Title */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-extrabold text-gray-800">My Profile</h1>
+        <p className="text-gray-400 text-sm mt-1">Your personal information and donor details</p>
+      </div>
+
+      <div className="max-w-3xl mx-auto space-y-6">
+        {/* Hero Profile Card */}
+        <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+          {/* Red gradient banner */}
+          <div className="h-36 bg-gradient-to-r from-red-700 via-red-500 to-rose-400 relative">
+            <div className="absolute inset-0 opacity-20"
+              style={{ backgroundImage: "radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)", backgroundSize: "40px 40px" }}>
             </div>
           </div>
-        )}
 
-        {!isEditing && (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="btn btn-primary w-full"
-          >
-            Edit Profile
-          </button>
-        )}
-
-        {isEditing && (
-          <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <label className="text-[15px]">Name</label>
-              <input
-                type="text"
-                name="name"
-                defaultValue={profileData?.name}
-                className="input input-bordered w-full"
-              />
-
-              <label className="text-[15px]">Email</label>
-              <input
-                type="email"
-                value={profileData?.email}
-                disabled
-                className="input input-bordered w-full bg-gray-100"
-              />
-
-              <label className="text-[15px]">Photo</label>
-              <input
-                name="photoUrl"
-                type="file"
-                className="input w-full"
-                placeholder="Enter Your Photo"
-              />
-
-              <label className="text-[15px]">District</label>
-              <input
-                type="text"
-                name="district"
-                defaultValue={profileData?.district}
-                className="input input-bordered w-full"
-              />
-
-              <label className="text-[15px]">Upazila</label>
-              <input
-                type="text"
-                name="upazila"
-                defaultValue={profileData?.upazila}
-                className="input input-bordered w-full"
-              />
-
-              <label className="text-[15px]">Blood Group</label>
-              <select
-                name="blood"
-                defaultValue={profileData?.blood}
-                className="select select-bordered w-full"
-              >
-                <option value="">Select Blood Group</option>
-                <option>A+</option>
-                <option>A-</option>
-                <option>B+</option>
-                <option>B-</option>
-                <option>AB+</option>
-                <option>AB-</option>
-                <option>O+</option>
-                <option>O-</option>
-              </select>
-
-              <div className="flex gap-3">
-                <button type="submit" className="btn btn-success flex-1">
-                  Save
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setIsEditing(false)}
-                  className="btn btn-outline flex-1"
-                >
-                  Cancel
-                </button>
+          {/* Profile content */}
+          <div className="bg-white px-6 pb-8 pt-0">
+            <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-14 mb-6">
+              {/* Avatar */}
+              <div className="relative flex-shrink-0">
+                <img
+                  src={profileData.mainPhotoUrl || user?.photoURL ||
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(profileData.name)}&background=dc2626&color=fff&bold=true&size=120`}
+                  alt={profileData.name}
+                  className="h-28 w-28 rounded-2xl object-cover border-4 border-white shadow-xl"
+                />
+                {/* Blood Group Badge */}
+                <span className={`absolute -bottom-2 -right-2 ${bloodColor} text-white text-xs font-extrabold px-2 py-1 rounded-full border-2 border-white shadow-md`}>
+                  {profileData.blood}
+                </span>
               </div>
-            </form>
+
+              <div className="text-center sm:text-left pb-1">
+                <h2 className="text-2xl font-extrabold text-gray-800">{profileData.name}</h2>
+                <p className="text-gray-400 text-sm">{profileData.email}</p>
+                <span className={`inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full capitalize border
+                  ${profileData.role === "admin" ? "bg-purple-100 text-purple-700 border-purple-200" :
+                    profileData.role === "volunteer" ? "bg-blue-100 text-blue-700 border-blue-200" :
+                    "bg-green-100 text-green-700 border-green-200"}`}>
+                  {profileData.role}
+                </span>
+              </div>
+            </div>
+
+            {/* Info Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InfoCard icon="🩸" label="Blood Group" value={profileData.blood || "Not set"} highlight />
+              <InfoCard icon="✉️" label="Email" value={profileData.email} />
+              <InfoCard icon="📍" label="District" value={profileData.district || "Not set"} />
+              <InfoCard icon="🏘️" label="Upazila" value={profileData.upazila || "Not set"} />
+              <InfoCard icon="👤" label="Role" value={profileData.role} capitalize />
+              <InfoCard icon="🟢" label="Status" value={profileData.status || "active"} capitalize
+                statusColor={profileData.status === "blocked" ? "text-red-600" : "text-green-600"} />
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Tip Card */}
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-5 flex items-start gap-4">
+          <div className="text-2xl">⚙️</div>
+          <div>
+            <p className="font-bold text-red-700">Want to update your profile?</p>
+            <p className="text-sm text-red-500 mt-1">
+              Go to <strong>Settings</strong> from the sidebar to change your name or profile photo.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
+
+const InfoCard = ({ icon, label, value, highlight, capitalize, statusColor }) => (
+  <div className={`flex items-center gap-4 px-5 py-4 rounded-2xl border transition-all
+    ${highlight ? "bg-red-50 border-red-200" : "bg-gray-50 border-gray-100"}`}>
+    <span className="text-2xl">{icon}</span>
+    <div>
+      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">{label}</p>
+      <p className={`font-bold text-gray-800 mt-0.5 ${capitalize ? "capitalize" : ""} ${statusColor || ""}`}>
+        {value}
+      </p>
+    </div>
+  </div>
+);
 
 export default Profile;

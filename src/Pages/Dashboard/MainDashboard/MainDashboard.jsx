@@ -118,117 +118,180 @@ const MainDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen p-6">
-      <h1 className="text-3xl text-center animate-bounce font-bold mb-8">
-        Welcome, {user?.displayName || "Donor"} 🎉
-      </h1>
+    <div className="min-h-screen p-4 md:p-8">
 
+      {/* Welcome Header */}
+      <div className="relative rounded-3xl overflow-hidden mb-8 shadow-xl">
+        <div className="bg-gradient-to-r from-red-700 via-red-600 to-rose-500 px-8 py-8">
+          <div className="absolute inset-0 opacity-10"
+            style={{ backgroundImage: "radial-gradient(circle at 10% 50%, white 1px, transparent 1px)", backgroundSize: "32px 32px" }}>
+          </div>
+          <div className="relative z-10">
+            <p className="text-red-200 text-sm font-semibold uppercase tracking-widest mb-1">Dashboard</p>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-white">
+              Welcome back, {user?.displayName?.split(" ")[0] || "Donor"} 👋
+            </h1>
+            <p className="text-red-100 mt-2 text-sm">Here's a summary of your recent blood donation activity.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Admin Stats Cards */}
       {role !== "donor" && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white shadow rounded-xl p-6 flex flex-col items-center">
-            <FaUsers className="text-4xl text-blue-500 mb-3" />
-            <h2 className="text-2xl font-bold">{countDonor}</h2>
-            <p className="text-gray-500">Total Donors</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6 flex items-center gap-5 hover:shadow-lg transition-shadow">
+            <div className="bg-blue-100 rounded-2xl p-4">
+              <FaUsers className="text-3xl text-blue-500" />
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm font-semibold">Total Donors</p>
+              <h2 className="text-3xl font-extrabold text-gray-800">{countDonor ?? "—"}</h2>
+            </div>
           </div>
-          <div className="bg-white shadow rounded-xl p-6 flex flex-col items-center">
-            <FaMoneyBillWave className="text-4xl text-green-500 mb-3" />
-            <h2 className="text-2xl font-bold">${totalFund}</h2>
-            <p className="text-gray-500">Total Funding</p>
+          <div className="bg-white rounded-2xl shadow-md border border-green-100 p-6 flex items-center gap-5 hover:shadow-lg transition-shadow">
+            <div className="bg-green-100 rounded-2xl p-4">
+              <FaMoneyBillWave className="text-3xl text-green-500" />
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm font-semibold">Total Funding</p>
+              <h2 className="text-3xl font-extrabold text-gray-800">${totalFund ?? "—"}</h2>
+            </div>
           </div>
-          <div className="bg-white shadow rounded-xl p-6 flex flex-col items-center">
-            <FaTint className="text-4xl text-red-500 mb-3" />
-            <h2 className="text-2xl font-bold">{countReq}</h2>
-            <p className="text-gray-500">Blood Donation Requests</p>
+          <div className="bg-white rounded-2xl shadow-md border border-red-100 p-6 flex items-center gap-5 hover:shadow-lg transition-shadow">
+            <div className="bg-red-100 rounded-2xl p-4">
+              <FaTint className="text-3xl text-red-500" />
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm font-semibold">Total Requests</p>
+              <h2 className="text-3xl font-extrabold text-gray-800">{countReq ?? "—"}</h2>
+            </div>
           </div>
         </div>
       )}
 
+      {/* Recent Donation Requests */}
       {recentRequests?.length > 0 && (
-        <div className="bg-white rounded-xl shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">
-            Recent Donation Requests
-          </h2>
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-8">
+          {/* Section Header */}
+          <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-1.5 bg-red-500 rounded-full"></div>
+              <h2 className="text-xl font-extrabold text-gray-800">Recent Donation Requests</h2>
+            </div>
+            <span className="bg-red-100 text-red-600 text-xs font-bold px-3 py-1.5 rounded-full">
+              {recentRequests.length} Request{recentRequests.length > 1 ? "s" : ""}
+            </span>
+          </div>
+
           <div className="overflow-x-auto">
-            <table className="table w-full">
+            <table className="w-full text-sm">
               <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Recipient</th>
-                  <th>Location</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Blood Group</th>
-                  <th>Status</th>
-                  <th>Donor Info</th>
-                  <th>Actions</th>
+                <tr className="bg-slate-50 text-gray-500 text-left text-xs uppercase tracking-wider">
+                  <th className="px-6 py-4 font-semibold">#</th>
+                  <th className="px-6 py-4 font-semibold">Recipient</th>
+                  <th className="px-6 py-4 font-semibold">Location</th>
+                  <th className="px-6 py-4 font-semibold">Date & Time</th>
+                  <th className="px-6 py-4 font-semibold">Blood</th>
+                  <th className="px-6 py-4 font-semibold">Status</th>
+                  <th className="px-6 py-4 font-semibold">Donor Info</th>
+                  <th className="px-6 py-4 font-semibold text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-50">
                 {recentRequests.map((req, index) => (
-                  <tr key={req._id} className="border">
-                    <th>{index + 1}</th>
-                    <td>{req.recipientName}</td>
-                    <td>
-                      {req.recipientDistrict}, {req.recipientUpazila}
+                  <tr key={req._id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 text-gray-400 font-bold">{index + 1}</td>
+
+                    {/* Recipient */}
+                    <td className="px-6 py-4">
+                      <p className="font-bold text-gray-800">{req.recipientName}</p>
+                      <p className="text-xs text-gray-400 truncate max-w-[120px]">{req.hospitalName}</p>
                     </td>
-                    <td>{req.donationDate}</td>
-                    <td>{req.donationTime}</td>
-                    <td>{req.bloodGroup}</td>
-                    <td>{req.donationStatus}</td>
-                    <td>
-                      {req.donationStatus === "inprogress" && (
-                        <>
-                          {req.donorName || user?.displayName} <br />
-                          {req.donorEmail || user?.email}
-                        </>
+
+                    {/* Location */}
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-xs px-2.5 py-1 rounded-full font-medium">
+                        📍 {req.recipientDistrict}
+                      </span>
+                    </td>
+
+                    {/* Date & Time */}
+                    <td className="px-6 py-4">
+                      <p className="font-semibold text-gray-700">{req.donationDate}</p>
+                      <p className="text-xs text-gray-400">{req.donationTime}</p>
+                    </td>
+
+                    {/* Blood Group */}
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-red-100 text-red-700 font-extrabold text-sm border border-red-200">
+                        {req.bloodGroup}
+                      </span>
+                    </td>
+
+                    {/* Status Badge */}
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold capitalize border
+                        ${req.donationStatus === "pending" ? "bg-yellow-100 text-yellow-700 border-yellow-200" :
+                          req.donationStatus === "inprogress" ? "bg-blue-100 text-blue-700 border-blue-200" :
+                          req.donationStatus === "done" ? "bg-green-100 text-green-700 border-green-200" :
+                          "bg-red-100 text-red-700 border-red-200"}`}>
+                        <span className={`h-1.5 w-1.5 rounded-full
+                          ${req.donationStatus === "pending" ? "bg-yellow-500" :
+                            req.donationStatus === "inprogress" ? "bg-blue-500" :
+                            req.donationStatus === "done" ? "bg-green-500" : "bg-red-500"}`}>
+                        </span>
+                        {req.donationStatus}
+                      </span>
+                    </td>
+
+                    {/* Donor Info */}
+                    <td className="px-6 py-4">
+                      {req.donationStatus === "inprogress" ? (
+                        <div>
+                          <p className="font-semibold text-gray-700 text-xs">{req.donorName || user?.displayName}</p>
+                          <p className="text-gray-400 text-xs truncate max-w-[130px]">{req.donorEmail || user?.email}</p>
+                        </div>
+                      ) : (
+                        <span className="text-gray-300 text-xs">—</span>
                       )}
                     </td>
-                    <td className="flex flex-wrap justify-between items-center gap-2">
-                      <div className="flex gap-2 flex-wrap">
+
+                    {/* Actions */}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center gap-2 flex-wrap">
                         <Link to={`/dashboard/edit-request/${req._id}`}>
-                          <button className="btn btn-sm btn-warning">
-                            Edit
+                          <button className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white transition-all hover:scale-105 shadow-sm">
+                            ✏️ Edit
                           </button>
                         </Link>
 
                         {req.donationStatus === "inprogress" && (
                           <>
                             <button
-                              onClick={() =>
-                                handleStatusUpdate(req._id, "done")
-                              }
-                              className="btn btn-sm btn-success"
+                              onClick={() => handleStatusUpdate(req._id, "done")}
+                              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-green-600 hover:bg-green-700 text-white transition-all hover:scale-105 shadow-sm"
                             >
-                              Done
+                              ✅ Done
                             </button>
                             <button
-                              onClick={() =>
-                                handleStatusUpdate(req._id, "canceled")
-                              }
-                              className="btn btn-sm btn-error"
+                              onClick={() => handleStatusUpdate(req._id, "canceled")}
+                              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-500 hover:bg-red-600 text-white transition-all hover:scale-105 shadow-sm"
                             >
-                              Cancel
+                              ✕ Cancel
                             </button>
                           </>
                         )}
-                      </div>
 
-                      <div className="flex gap-2 flex-wrap">
                         <button
                           onClick={() => handleDelete(req._id)}
-                          className="btn btn-sm btn-neutral"
+                          className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-700 hover:bg-gray-900 text-white transition-all hover:scale-105 shadow-sm"
                         >
-                          Delete
+                          🗑 Delete
                         </button>
 
                         <Link to={`/details/${req._id}`}>
-                          <button
-                            onClick={() =>
-                              navigate(`/request-details/${req._id}`)
-                            }
-                            className="btn btn-sm btn-info"
-                          >
-                            View
+                          <button className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition-all hover:scale-105 shadow-sm">
+                            👁 View
                           </button>
                         </Link>
                       </div>
@@ -241,12 +304,13 @@ const MainDashboard = () => {
         </div>
       )}
 
-      <div className=" flex items-center justify-center mt-20">
+      {/* CTA Button */}
+      <div className="flex justify-center mt-4">
         <button
           onClick={() => navigate("/all-request")}
-          className="btn btn-primary"
+          className="bg-red-600 hover:bg-red-500 text-white font-bold px-10 py-3.5 rounded-2xl transition-all hover:scale-105 shadow-lg shadow-red-200"
         >
-          View My All Requests
+          View All Requests →
         </button>
       </div>
     </div>

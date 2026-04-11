@@ -19,6 +19,8 @@ import AllRequest from "../Pages/AllRequest/AllRequest";
 import Profile from "../Pages/Dashboard/Profile/Profile";
 import Details from "../Pages/Details/Details";
 import EditRequest from "../Pages/Dashboard/Edit/EditRequest";
+import Settings from "../Pages/Dashboard/Settings/Settings";
+import DonationJourney from "../Pages/Dashboard/DonationJourney/DonationJourney";
 
 const router = createBrowserRouter([
   {
@@ -101,6 +103,22 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Profile />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: "settings",
+        element: (
+          <PrivateRoute>
+            <Settings />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: "donation-journey",
+        element: (
+          <PrivateRoute>
+            <DonationJourney />
           </PrivateRoute>
         )
       },

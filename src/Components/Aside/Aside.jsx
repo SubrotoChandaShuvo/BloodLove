@@ -8,6 +8,7 @@ import {
   CirclePlus,
   ChartNoAxesGantt,
   UserPen,
+  Activity,
 } from "lucide-react";
 import { signOut } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
@@ -83,6 +84,30 @@ const logout = () => {
         >
           <UserPen size={22} />
           My Profile
+        </NavLink>
+
+        <NavLink
+          to="/dashboard/settings"
+          onClick={closeSidebar}
+          className={({ isActive }) =>
+            `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium
+            ${isActive ? "bg-red-600 shadow-lg shadow-red-600/30" : "hover:bg-slate-800 text-gray-300 hover:text-white"}`
+          }
+        >
+          <Settings size={22} />
+          Settings
+        </NavLink>
+
+        <NavLink
+          to="/dashboard/donation-journey"
+          onClick={closeSidebar}
+          className={({ isActive }) =>
+            `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium
+            ${isActive ? "bg-red-600 shadow-lg shadow-red-600/30" : "hover:bg-slate-800 text-gray-300 hover:text-white"}`
+          }
+        >
+          <Activity size={22} />
+          Donation Journey
         </NavLink>
 
         {/* <NavLink
