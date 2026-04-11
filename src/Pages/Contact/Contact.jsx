@@ -3,6 +3,8 @@ import { AuthContext } from "../../Provider/AuthProvider";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
+const WEB3FORMS_KEY = "0b4f24f9-2099-4363-8fb4-79951946c5ad";
+
 const Contact = () => {
   const { user } = useContext(AuthContext);
   const name = user?.displayName || "";
@@ -10,22 +12,46 @@ const Contact = () => {
   const navigate = useNavigate();
   const [sending, setSending] = useState(false);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!user) return navigate("/login");
 
+    const form = e.target;
     setSending(true);
-    setTimeout(() => {
-      setSending(false);
-      Swal.fire({
-        icon: "success",
-        title: `Thank You, ${name}! 🎉`,
-        text: "Your message has been sent. We'll get back to you soon.",
-        confirmButtonColor: "#dc2626",
-        confirmButtonText: "Awesome!",
+
+    const data = {
+      access_key: WEB3FORMS_KEY,
+      name: form.name.value,
+      email: form.email.value,
+      message: form.message.value,
+      subject: "New Message from BloodLove Contact Form",
+    };
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(data),
       });
-      e.target.reset();
-    }, 1000);
+      const result = await res.json();
+      setSending(false);
+
+      if (result.success) {
+        Swal.fire({
+          icon: "success",
+          title: `Thank You, ${name}! 🎉`,
+          text: "Your message has been sent. We'll get back to you soon.",
+          confirmButtonColor: "#dc2626",
+          confirmButtonText: "Awesome!",
+        });
+        form.reset();
+      } else {
+        throw new Error("Failed");
+      }
+    } catch {
+      setSending(false);
+      Swal.fire({ icon: "error", title: "Failed to Send", text: "Please try again or email us directly." });
+    }
   };
 
   return (
@@ -74,6 +100,7 @@ const Contact = () => {
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1.5">💬 Message</label>
                 <textarea
+                  name="message"
                   rows="4"
                   required
                   placeholder="Write your message here..."

@@ -11,23 +11,34 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const logout = () => {
-    signOut(auth)
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Logged out!",
-          text: "You have been successfully logged out.",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "OK",
-        });
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `Something went wrong: ${error.message}`,
-        });
-      });
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Stay Logged In",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        signOut(auth)
+          .then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "Logged out!",
+              text: "You have been successfully logged out.",
+              confirmButtonColor: "#dc2626",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+            navigate("/login");
+          })
+          .catch((error) => {
+            Swal.fire({ icon: "error", title: "Oops...", text: `Something went wrong: ${error.message}` });
+          });
+      }
+    });
   };
 
   const navItemClass = ({ isActive }) =>
