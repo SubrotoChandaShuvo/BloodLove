@@ -8,8 +8,10 @@ const AllRequest = () => {
   const [totalRequests, setTotalRequests] = useState(0);
   const itemsPerPage = 9; 
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+  setLoading(true);
   axiosInstance.get("/request", {
     params: {
       page: currentPage - 1,
@@ -20,8 +22,12 @@ const AllRequest = () => {
   .then(res => {
     setAllRequest(res.data.requests);
     setTotalRequests(res.data.totalRequests);
+    setLoading(false);
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    console.log(err);
+    setLoading(false);
+  });
 }, [axiosInstance, currentPage, itemsPerPage]);
 
 
@@ -42,7 +48,13 @@ const AllRequest = () => {
         All Requests
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10 px-6">
+      {loading && allRequest.length === 0 ? (
+        <div className="flex justify-center items-center min-h-[40vh]">
+  <span className="loading loading-spinner text-error w-[80px] h-[80px]"></span>
+</div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10 px-6">
         {allRequest.map((req) => (
           req.donationStatus === 'pending' && (
           <div
@@ -97,6 +109,8 @@ const AllRequest = () => {
           Next
         </button>
       </div>
+        </>
+      )}
     </div>
   );
 };

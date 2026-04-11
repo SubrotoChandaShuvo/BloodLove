@@ -53,11 +53,11 @@ const Footer = () => {
         <div>
           <h3 className="footer-title">Account & Support</h3>
           <ul className="space-y-2">
-            <li>
+            {/* <li>
               <Link to="/login" className="link link-hover">
                 Login
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/dashboard/main" className="link link-hover">
                 Dashboard

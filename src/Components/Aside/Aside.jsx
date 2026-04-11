@@ -39,74 +39,86 @@ const logout = () => {
 };
 
 
+  const closeSidebar = () => {
+    const drawer = document.getElementById("dashboard-drawer");
+    if (drawer && window.innerWidth < 1024) {
+      drawer.checked = false;
+    }
+  };
+
   return (
-    <aside className="fixed left-0 top-0 w-64 h-screen bg-slate-900 text-white flex flex-col">
+    <aside className="flex flex-col h-full w-72 bg-slate-900 text-white shadow-2xl">
       {/* Logo */}
       {role == "admin" && (
-        <div className="h-16 flex items-center justify-center text-xl font-bold border-b border-slate-700">
+        <div className="h-[72px] flex items-center justify-center text-xl font-extrabold border-b border-slate-700/50 bg-slate-950">
           Admin Panel
         </div>
       )}
       {role == "donor" && (
-        <div className="h-16 flex items-center justify-center text-xl font-bold border-b border-slate-700">
-          Info Panel
+        <div className="h-[72px] flex items-center justify-center text-xl font-extrabold border-b border-slate-700/50 bg-slate-950">
+          Donor Panel
         </div>
       )}
 
       {/* Menu */}
-      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+      <nav className="flex-1 px-4 py-8 space-y-3 overflow-y-auto w-full">
         <NavLink
           to="/dashboard/main"
+          onClick={closeSidebar}
           className={({ isActive }) =>
-            `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
+            `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium
+            ${isActive ? "bg-red-600 shadow-lg shadow-red-600/30" : "hover:bg-slate-800 text-gray-300 hover:text-white"}`
           }
         >
-          <Home size={20} />
+          <Home size={22} />
           Dashboard
         </NavLink>
         <NavLink
           to="/dashboard/profile"
+          onClick={closeSidebar}
           className={({ isActive }) =>
-            `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
+            `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium
+            ${isActive ? "bg-red-600 shadow-lg shadow-red-600/30" : "hover:bg-slate-800 text-gray-300 hover:text-white"}`
           }
         >
-          <UserPen size={20} />
+          <UserPen size={22} />
           My Profile
         </NavLink>
 
         <NavLink
           to="add-request"
+          onClick={closeSidebar}
           className={({ isActive }) =>
-            `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
+            `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium
+            ${isActive ? "bg-red-600 shadow-lg shadow-red-600/30" : "hover:bg-slate-800 text-gray-300 hover:text-white"}`
           }
         >
-          <CirclePlus size={20} />
+          <CirclePlus size={22} />
           Add Request
         </NavLink>
 
         {role === "admin" || role === "volunteer" ? (
           <NavLink
             to="/dashboard/my-request"
+            onClick={closeSidebar}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition
-      ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
+              `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium
+              ${isActive ? "bg-red-600 shadow-lg shadow-red-600/30" : "hover:bg-slate-800 text-gray-300 hover:text-white"}`
             }
           >
-            <ChartNoAxesGantt size={20} />
+            <ChartNoAxesGantt size={22} />
             All Donation Requests
           </NavLink>
         ) : (
           <NavLink
             to="/dashboard/my-request"
+            onClick={closeSidebar}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition
-      ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
+              `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium
+              ${isActive ? "bg-red-600 shadow-lg shadow-red-600/30" : "hover:bg-slate-800 text-gray-300 hover:text-white"}`
             }
           >
-            <ChartNoAxesGantt size={20} />
+            <ChartNoAxesGantt size={22} />
             My Requests
           </NavLink>
         )}
@@ -114,35 +126,42 @@ const logout = () => {
         {role == "admin" && (
           <NavLink
             to="/dashboard/all-users"
+            onClick={closeSidebar}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
+              `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium
+            ${isActive ? "bg-red-600 shadow-lg shadow-red-600/30" : "hover:bg-slate-800 text-gray-300 hover:text-white"}`
             }
           >
-            <Users size={20} />
+            <Users size={22} />
             All Users
           </NavLink>
         )}
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `flex items-center gap-3 px-4 py-2 rounded-lg transition
-            ${isActive ? "bg-red-600" : "hover:bg-slate-800"}`
-          }
-        >
-          <ArrowBigLeft size={20} />
-          Go Home
-        </NavLink>
+        
+        <div className="pt-4 mt-4 border-t border-slate-700/50">
+            <NavLink
+            to="/"
+            onClick={closeSidebar}
+            className={({ isActive }) =>
+                `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-medium
+                ${isActive ? "bg-red-600 shadow-lg shadow-red-600/30" : "hover:bg-slate-800 text-gray-300 hover:text-white"}`
+            }
+            >
+            <ArrowBigLeft size={22} />
+            Go to Home
+            </NavLink>
+        </div>
       </nav>
 
       {/* Logout */}
-      <Link
-        onClick={logout}
-        className="m-4 flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-600 transition"
-      >
-        <LogOut size={20} />
-        Logout
-      </Link>
+      <div className="p-4 border-t border-slate-800">
+        <Link
+            onClick={() => { closeSidebar(); logout(); }}
+            className="flex items-center gap-4 px-4 py-3 rounded-xl bg-slate-800 hover:bg-red-600 text-gray-300 hover:text-white transition-all duration-300 font-bold shadow-md"
+        >
+            <LogOut size={22} />
+            Logout
+        </Link>
+      </div>
     </aside>
   );
 };
