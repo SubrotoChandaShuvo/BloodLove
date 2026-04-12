@@ -68,13 +68,31 @@ const Register = () => {
   const googleSignup = () => {
     handleGoogleSignin()
       .then((result) => {
+        // On mobile redirect, result is undefined — AuthProvider handles it
+        if (!result?.user) return;
+
         const user = result.user;
         setUser(user);
-        axios.post("https://bloodlove.vercel.app/users", { email: user.email, name: user.displayName, mainPhotoUrl: user.photoURL, blood: "Unknown", district: "Unknown", upazila: "Unknown" })
-          .then(() => { setIsFatching(true); Swal.fire({ title: "Registration Successful! 🎉", icon: "success", confirmButtonColor: "#dc2626" }); navigate("/"); })
+        axios.post("https://bloodlove.vercel.app/users", {
+          email: user.email,
+          name: user.displayName,
+          mainPhotoUrl: user.photoURL,
+          blood: "Unknown",
+          district: "Unknown",
+          upazila: "Unknown",
+        })
+          .then(() => {
+            setIsFatching(true);
+            Swal.fire({ title: "Registration Successful! 🎉", icon: "success", confirmButtonColor: "#dc2626" });
+            navigate("/");
+          })
           .catch(() => navigate("/"));
       })
-      .catch(() => Swal.fire({ icon: "error", title: "Oops...", text: "Google signup failed. Please try again." }));
+      .catch((err) => {
+        if (err?.code !== "auth/redirect-cancelled-by-user") {
+          Swal.fire({ icon: "error", title: "Oops...", text: "Google signup failed. Please try again." });
+        }
+      });
   };
 
   return (

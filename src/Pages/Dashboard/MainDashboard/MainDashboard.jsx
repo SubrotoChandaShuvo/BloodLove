@@ -129,7 +129,7 @@ const MainDashboard = () => {
           <div className="relative z-10">
             <p className="text-red-200 text-sm font-semibold uppercase tracking-widest mb-1">Dashboard</p>
             <h1 className="text-3xl md:text-4xl font-extrabold text-white">
-              Welcome back, {user?.displayName?.split(" ")[0] || "Donor"} 👋
+              Welcome, {user?.displayName?.split(" ")[0] || "Donor"}
             </h1>
             <p className="text-red-100 mt-2 text-sm">Here's a summary of your recent blood donation activity.</p>
           </div>

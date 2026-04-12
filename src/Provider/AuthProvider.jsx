@@ -5,6 +5,8 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth";
 import axios from "axios";
 
@@ -26,25 +28,49 @@ const AuthProvider = ({ children }) => {
     return createUserWithEmailAndPassword(auth, email, pass);
   };
 
+  // Detect mobile browsers
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+
   const handleGoogleSignin = () => {
+    if (isMobile) {
+      // On mobile, use redirect (popups get blocked)
+      return signInWithRedirect(auth, googleProvider);
+    }
     return signInWithPopup(auth, googleProvider);
   };
 
   console.log(user);
 
+  // Handle redirect result after returning from Google login on mobile
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          setUser(result.user);
+          // Save user to DB
+          axios.post("https://bloodlove.vercel.app/users", {
+            email: result.user.email,
+            name: result.user.displayName,
+            mainPhotoUrl: result.user.photoURL,
+            blood: "Unknown",
+            district: "Unknown",
+            upazila: "Unknown",
+          }).catch(() => {});
+          // Navigate home after returning from Google redirect
+          window.location.href = "/";
+        }
+      })
+      .catch((err) => console.error("Redirect result error:", err));
+  }, []);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log(currentUser);
-
       setUser(currentUser);
       setLoading(false);
-
-      // console.log(currentUser);
     });
-
-    return () => {
-      unsubscribe();
-    };
+    return () => { unsubscribe(); };
   }, []);
 
   // useEffect(() => {
