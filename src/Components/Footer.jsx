@@ -17,7 +17,7 @@ const Footer = () => {
           <p className="text-slate-400 text-sm leading-relaxed mb-5">
             <span className="font-bold text-white">BloodLove</span> connects blood donors with those in need — saving lives across Bangladesh, one drop at a time. ❤️
           </p>
-          {/* Social Links */}
+          {/* Social Links
           <div className="flex gap-3">
             {[
               { icon: "📘", label: "Facebook", href: "#" },
@@ -33,7 +33,7 @@ const Footer = () => {
                 {s.icon}
               </a>
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Quick Links */}
@@ -127,7 +127,7 @@ const Footer = () => {
       <div className="border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-slate-500">
           <p>© {year} <span className="text-red-400 font-bold">BloodLove</span>. All rights reserved.</p>
-          <p>Made with ❤️ to save lives across Bangladesh</p>
+          <p>Made with  Red Love to save lives across Bangladesh</p>
         </div>
       </div>
     </footer>
