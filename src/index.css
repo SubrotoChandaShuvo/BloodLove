@@ -2,14 +2,39 @@
 @plugin "daisyui";
 
 /* Custom Global Theme related to BloodLove */
+:root {
+  --bg-color: #fafafa;
+  --text-color: #1f2937;
+  --nav-bg: rgba(255, 255, 255, 0.4);
+  --gradient-1: rgba(254, 226, 226, 0.5);
+  --gradient-2: rgba(254, 202, 202, 0.4);
+}
+
+[data-theme="dark"] {
+  --bg-color: #0c0a09;
+  --text-color: #f9fafb;
+  --nav-bg: rgba(12, 10, 9, 0.6);
+  --gradient-1: rgba(153, 27, 27, 0.15);
+  --gradient-2: rgba(69, 10, 10, 0.2);
+}
+
 html, body {
-  background-color: #fafafa;
+  background-color: var(--bg-color);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(254, 226, 226, 0.5) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(254, 202, 202, 0.4) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, var(--gradient-1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, var(--gradient-2) 0px, transparent 50%);
   background-attachment: fixed;
-  color: #1f2937;
+  color: var(--text-color);
   min-height: 100vh;
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Custom red text selection to match the brand */

@@ -1,13 +1,16 @@
 import React, { useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../Provider/AuthProvider";
+import { ThemeContext } from "../Provider/ThemeProvider";
 import { signOut } from "firebase/auth";
 import auth from "../firebase/firebase.config";
-import logo from "../assets/Logo.png";
+import logo from "../assets/LogoGradient.svg";
 import Swal from "sweetalert2";
+import { Sun, Moon } from "lucide-react";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
 
   const logout = () => {
@@ -82,7 +85,7 @@ const Navbar = () => {
 
   return (
     <div className="sticky top-0 z-50 w-full transition-all duration-300">
-      <div className="navbar bg-white/40 backdrop-blur-xl border-b border-white/40 shadow-sm md:px-8">
+      <div className="navbar bg-[var(--nav-bg)] backdrop-blur-xl border-b border-white/10 shadow-sm md:px-8">
         {/* LEFT */}
         <div className="navbar-start">
           <div className="dropdown">
@@ -121,6 +124,18 @@ const Navbar = () => {
 
         {/* RIGHT */}
         <div className="navbar-end gap-3">
+          {/* THEME TOGGLE */}
+          <button
+            onClick={toggleTheme}
+            className="btn btn-ghost btn-circle hover:bg-white/20 transition-all duration-300"
+            title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+          >
+            {theme === "light" ? (
+              <Moon className="h-6 w-6 text-gray-700" />
+            ) : (
+              <Sun className="h-6 w-6 text-yellow-500" />
+            )}
+          </button>
           {user ? (
             <Link to="/dashboard/main" className="btn bg-gray-900 hover:bg-gray-800 text-white border-none shadow-lg rounded-xl px-6 transition-all hover:scale-105">
               Dashboard
